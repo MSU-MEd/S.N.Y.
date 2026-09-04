@@ -73,7 +73,6 @@
   <section class="max-w-4xl mx-auto px-4 -mt-8 relative z-20">
     <div class="bg-white rounded-3xl md:rounded-full shadow-lg border border-gray-100 py-5 px-6 md:px-10 grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-0 md:divide-x md:divide-gray-200">
       
-      <!-- การ์ด 1: จำนวนพรรณไม้ -->
       <div class="flex items-center justify-start md:justify-center gap-4 px-3 md:px-6">
         <div class="w-12 h-12 rounded-full bg-red-700 text-white flex items-center justify-center text-xl shrink-0 shadow-sm">
           <i class="fa-solid fa-leaf"></i>
@@ -87,7 +86,6 @@
         </div>
       </div>
 
-      <!-- การ์ด 2: จุดเรียนรู้ -->
       <div class="flex items-center justify-start md:justify-center gap-4 px-3 md:px-6 pt-4 md:pt-0 border-t md:border-t-0 border-gray-100">
         <div class="w-12 h-12 rounded-full bg-red-700 text-white flex items-center justify-center text-xl shrink-0 shadow-sm">
           <i class="fa-solid fa-book-open"></i>
@@ -101,7 +99,6 @@
         </div>
       </div>
 
-      <!-- การ์ด 3: หมวดหมู่ -->
       <div class="flex items-center justify-start md:justify-center gap-4 px-3 md:px-6 pt-4 md:pt-0 border-t md:border-t-0 border-gray-100">
         <div class="w-12 h-12 rounded-full bg-red-700 text-white flex items-center justify-center text-xl shrink-0 shadow-sm">
           <i class="fa-solid fa-shapes"></i>
@@ -208,30 +205,41 @@
       </div>
       <div class="md:text-right space-y-1 text-red-200">
         <p><i class="fa-solid fa-location-dot mr-1"></i> ตำบลส่องนางใย อำเภอเมือง จังหวัดมหาสารคาม</p>
-        <p><i class="fa-solid fa-globe mr-1"></i> www.bansongnangyai.ac.th</p>
+        <p><i class="fa-solid fa-globe mr-1"></i> https://main.mkm.go.th/</p>
       </div>
     </div>
   </footer>
 
-  <!-- Modal ดูรายละเอียดต้นไม้ -->
-  <div id="detailModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-    <div class="bg-white max-w-lg w-full rounded-2xl overflow-hidden shadow-2xl">
-      <div id="modalImage" class="h-60 bg-gray-200 bg-cover bg-center"></div>
-      <div class="p-6">
-        <div class="flex justify-between items-start">
+  <!-- Modal ดูรายละเอียดต้นไม้ (ปรับการแสดงรูปให้เห็นเต็มภาพ 100%) -->
+  <div id="detailModal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+    <div class="bg-white max-w-lg w-full rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+      <!-- พื้นที่รูปภาพ: ใช้ object-contain เพื่อให้รูปต้นไม้ไม่โดนตัดขอบ -->
+      <div class="relative w-full h-72 bg-gradient-to-b from-gray-900 to-gray-800 flex items-center justify-center overflow-hidden">
+        <img id="modalImgTag" src="" alt="" class="max-h-full max-w-full object-contain p-2" />
+        <button onclick="closeDetailModal()" class="absolute top-3 right-3 w-9 h-9 bg-black/50 hover:bg-black/80 text-white rounded-full flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+      
+      <div class="p-6 overflow-y-auto">
+        <div class="flex justify-between items-start gap-3">
           <div>
             <h3 id="modalNameTh" class="text-2xl font-bold text-gray-900"></h3>
             <p id="modalNameEn" class="text-sm text-red-700 font-semibold"></p>
             <p id="modalSciName" class="text-xs italic text-gray-500 mt-0.5"></p>
           </div>
-          <span id="modalCategory" class="px-3 py-1 bg-red-50 text-red-700 text-xs rounded-full border border-red-200 font-medium"></span>
+          <span id="modalCategory" class="px-3 py-1 bg-red-50 text-red-700 text-xs rounded-full border border-red-200 font-medium shrink-0"></span>
         </div>
+        
         <div class="mt-4 pt-4 border-t space-y-3 text-sm text-gray-700">
-          <p><strong>สรรพคุณ / ประโยชน์:</strong> <span id="modalBenefits"></span></p>
-          <p><strong>จุดที่พบในโรงเรียน:</strong> <span id="modalLocation"></span></p>
+          <p><strong>สรรพคุณ / ประโยชน์:</strong> <span id="modalBenefits" class="text-gray-600"></span></p>
+          <p><strong>จุดที่พบในโรงเรียน:</strong> <span id="modalLocation" class="text-gray-600"></span></p>
         </div>
+        
         <div class="mt-6 flex justify-end">
-          <button onclick="closeDetailModal()" class="px-5 py-2 bg-gray-100 text-gray-700 text-xs font-semibold rounded-lg hover:bg-gray-200">ปิด</button>
+          <button onclick="closeDetailModal()" class="px-6 py-2 bg-gray-100 text-gray-700 text-xs font-semibold rounded-full hover:bg-gray-200 transition">
+            ปิดหน้าต่าง
+          </button>
         </div>
       </div>
     </div>
@@ -250,7 +258,7 @@
       <form id="addPlantForm" onsubmit="submitPlantForm(event)" class="mt-4 space-y-3 text-sm">
         <div>
           <label class="block text-xs font-semibold text-gray-700 mb-1">รหัสผ่านแอดมิน *</label>
-          <input type="password" id="adminPassword" required class="w-full px-3 py-2 border rounded-lg focus:ring-1 focus:ring-red-600 outline-none" placeholder="ป้อนรหัสผ่านก่อนเริ่มเพิ่มข้อมูลทุกครั้ง" />
+          <input type="password" id="adminPassword" required class="w-full px-3 py-2 border rounded-lg focus:ring-1 focus:ring-red-600 outline-none" placeholder="ป้อนรหัสผ่านก่อนเริ่มเพิ่มข้อมูล" />
         </div>
 
         <div class="grid grid-cols-2 gap-3">
@@ -282,7 +290,7 @@
 
         <div>
           <label class="block text-xs font-semibold text-gray-700 mb-1">สรรพคุณ / ประโยชน์</label>
-          <textarea id="formBenefits" rows="2" class="w-full px-3 py-2 border rounded-lg focus:ring-1 focus:ring-red-600 outline-none" placeholder="สรรพคุณทางยา ประโยชน์การใช้สอย หรือลักษณะเด่น"></textarea>
+          <textarea id="formBenefits" rows="2" class="w-full px-3 py-2 border rounded-lg focus:ring-1 focus:ring-red-600 outline-none" placeholder="สรรพคุณทางยา ประโยชน์ หรือลักษณะเด่น"></textarea>
         </div>
 
         <div>
@@ -291,10 +299,12 @@
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1">รูปภาพต้นไม้ (ระบบจะย่อขนาดให้อัตโนมัติ) *</label>
+          <label class="block text-xs font-semibold text-gray-700 mb-1">รูปภาพต้นไม้ *</label>
           <input type="file" id="formImage" accept="image/*" required onchange="previewSelectedImage(event)" class="w-full text-xs text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100" />
           <div id="imagePreviewContainer" class="hidden mt-2">
-            <img id="imagePreview" class="h-28 w-full object-cover rounded-lg border" />
+            <div class="w-full h-44 bg-gray-100 rounded-lg overflow-hidden border flex items-center justify-center">
+              <img id="imagePreview" class="max-h-full max-w-full object-contain" />
+            </div>
             <p id="imageSizeNotice" class="text-[11px] text-green-600 mt-1 font-medium"></p>
           </div>
         </div>
@@ -310,9 +320,8 @@
   </div>
 
   <script>
-    // ** Web App URL จาก Google Apps Script **
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxka1b4hbw3at8bk-PQ12bb25jUBpZ2w2uuYCMd8C8WeMYGOSZ8QHOJBfv3LUNNP6rV/exec";
-    const CACHE_STORAGE_KEY = "songnangyai_plants_cache_v2";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyeBRLD09yykR9FnhDemFOpHizfmFCJR_vH6e6zlGpt8UorhVdxAcBhHoG_WvQQnABb/exec";
+    const CACHE_STORAGE_KEY = "songnangyai_plants_cache_v3";
 
     let plantDataList = [];
     let currentBase64Image = "";
@@ -320,7 +329,6 @@
     window.addEventListener('DOMContentLoaded', initApp);
 
     function initApp() {
-      // 1. โหลดข้อมูลจาก LocalStorage ขึ้นมาแสดงทันที (0 วินาที)
       const localCached = localStorage.getItem(CACHE_STORAGE_KEY);
       if (localCached) {
         try {
@@ -332,20 +340,18 @@
           showSkeletonLoading();
         }
       } else {
-        // หากยังไม่เคยมีแคช ให้แสดง Skeleton Loading ทันที
         showSkeletonLoading();
       }
 
-      // 2. ดึงข้อมูลล่าสุดจากเซิร์ฟเวอร์แบบเบื้องหลัง
       fetchPlants();
     }
 
-    // แสดงโครงร่าง Skeleton Loading ระหว่างรอข้อมูลครั้งแรก
+    // Skeleton loading สัดส่วน 4:3 เท่ากับรูปจริง
     function showSkeletonLoading() {
       const grid = document.getElementById('plantGrid');
       grid.innerHTML = Array(4).fill(0).map(() => `
         <div class="bg-white rounded-2xl overflow-hidden shadow-sm border animate-pulse">
-          <div class="h-44 bg-gray-200"></div>
+          <div class="aspect-[4/3] bg-gray-200"></div>
           <div class="p-4 space-y-3">
             <div class="h-4 bg-gray-200 rounded w-2/3 mx-auto"></div>
             <div class="h-3 bg-gray-200 rounded w-1/2 mx-auto"></div>
@@ -363,8 +369,6 @@
         
         if (result.status === 'success' && result.data && result.data.length > 0) {
           plantDataList = result.data.filter(p => p.nameTh);
-          
-          // เซฟลง LocalStorage เพื่อให้เปิดครั้งต่อไปได้เร็วทันที
           localStorage.setItem(CACHE_STORAGE_KEY, JSON.stringify(plantDataList));
           
           renderPlants(plantDataList);
@@ -387,15 +391,15 @@
       if (el) el.innerText = text;
     }
 
-    // ปรับแต่ง URL ภาพ: หากเป็นภาพจาก Google Drive ให้ขอเป็นภาพความกว้าง 600px เพื่อให้โหลดไวสุดๆ
     function optimizeImageUrl(url) {
       if (!url) return 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=600';
       if (url.includes('lh3.googleusercontent.com/d/')) {
-        return url.split('=')[0] + '=w600';
+        return url.split('=')[0] + '=w800';
       }
       return url;
     }
 
+    // แสดงการ์ดพรรณไม้ด้วยสัดส่วน 4:3 และ object-contain เพื่อความคมชัด
     function renderPlants(plants) {
       const grid = document.getElementById('plantGrid');
       if (!plants.length) {
@@ -406,15 +410,20 @@
       grid.innerHTML = plants.map((plant, index) => {
         const imgUrl = optimizeImageUrl(plant.imageUrl);
         return `
-          <div class="bg-white rounded-2xl overflow-hidden shadow-sm border hover:shadow-md transition flex flex-col justify-between">
+          <div class="bg-white rounded-2xl overflow-hidden shadow-sm border hover:shadow-md transition flex flex-col justify-between group">
             <div>
-              <div class="h-44 overflow-hidden bg-gray-100">
+              <!-- กรอบรูปสัดส่วน 4:3 พอดีกับภาพถ่ายต้นไม้ -->
+              <div class="aspect-[4/3] w-full bg-gray-50 overflow-hidden relative border-b flex items-center justify-center p-2">
                 <img src="${imgUrl}" alt="${plant.nameTh}" loading="lazy" 
-                     class="w-full h-full object-cover hover:scale-105 transition duration-300" 
+                     class="max-h-full max-w-full object-contain group-hover:scale-105 transition duration-300" 
                      onerror="this.src='https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=600'" />
+                <span class="absolute top-2.5 right-2.5 bg-white/90 backdrop-blur-sm text-red-800 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-red-100 shadow-sm">
+                  ${plant.category || 'ทั่วไป'}
+                </span>
               </div>
+              
               <div class="p-4 text-center">
-                <h4 class="font-bold text-gray-900 text-base">${plant.nameTh}</h4>
+                <h4 class="font-bold text-gray-900 text-base group-hover:text-red-700 transition">${plant.nameTh}</h4>
                 <p class="text-xs text-red-700 font-semibold">${plant.nameEn || '-'}</p>
                 <p class="text-[11px] italic text-gray-400 mb-2">${plant.sciName || ''}</p>
                 <p class="text-xs text-gray-600 line-clamp-2">
@@ -422,8 +431,9 @@
                 </p>
               </div>
             </div>
+            
             <div class="p-4 pt-0">
-              <button onclick="openDetailModal(${index})" class="w-full py-2 bg-white text-gray-700 border border-gray-300 rounded-full text-xs font-semibold hover:bg-gray-50 transition">
+              <button onclick="openDetailModal(${index})" class="w-full py-2 bg-white text-gray-700 border border-gray-300 rounded-full text-xs font-semibold hover:bg-red-50 hover:text-red-700 hover:border-red-300 transition">
                 ดูรายละเอียด
               </button>
             </div>
@@ -451,7 +461,6 @@
       renderPlants(filtered);
     }
 
-    // ระบบบีบอัดรูปภาพด้วย HTML5 Canvas ก่อนส่งข้อมูล ช่วยประหยัดเวลาอัปโหลด
     function previewSelectedImage(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -461,7 +470,7 @@
         const img = new Image();
         img.onload = function() {
           const canvas = document.createElement('canvas');
-          const MAX_WIDTH = 800; // ย่อขนาดความกว้างเหลือ 800px พอดีสำหรับเว็บ
+          const MAX_WIDTH = 900;
           let width = img.width;
           let height = img.height;
 
@@ -476,10 +485,9 @@
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, width, height);
 
-          // แปลงเป็น JPEG คุณภาพ 0.75 (ลดขนาดเหลือ ~100KB อัปโหลดเสร็จไวมาก)
-          currentBase64Image = canvas.toDataURL('image/jpeg', 0.75);
+          currentBase64Image = canvas.toDataURL('image/jpeg', 0.82);
           document.getElementById('imagePreview').src = currentBase64Image;
-          document.getElementById('imageSizeNotice').innerText = "✓ ปรับแต่งขนาดรูปภาพเพื่อการอัปโหลดที่รวดเร็วเรียบร้อย";
+          document.getElementById('imageSizeNotice').innerText = "✓ ปรับแต่งและเตรียมความพร้อมรูปภาพเรียบร้อย";
           document.getElementById('imagePreviewContainer').classList.remove('hidden');
         };
         img.src = e.target.result;
@@ -515,13 +523,12 @@
         const result = await response.json();
 
         if (result.status === 'success') {
-          showToast('บันทึกข้อมูลและอัปโหลดภาพสำเร็จ');
+          showToast('บันทึกข้อมูลสำเร็จเรียบร้อย');
           closeAdminModal();
           document.getElementById('addPlantForm').reset();
           document.getElementById('imagePreviewContainer').classList.add('hidden');
           currentBase64Image = "";
           
-          // ล้าง LocalStorage เพื่อดึงข้อมูลใหม่ที่เพิ่งเพิ่มทันที
           localStorage.removeItem(CACHE_STORAGE_KEY);
           fetchPlants();
         } else {
@@ -545,7 +552,10 @@
       document.getElementById('modalLocation').innerText = plant.location || 'ไม่ได้ระบุ';
       
       const modalImg = optimizeImageUrl(plant.imageUrl);
-      document.getElementById('modalImage').style.backgroundImage = `url('${modalImg}')`;
+      const imgTag = document.getElementById('modalImgTag');
+      imgTag.src = modalImg;
+      imgTag.alt = plant.nameTh;
+
       document.getElementById('detailModal').classList.remove('hidden');
     }
 
@@ -571,9 +581,7 @@
     function showFallbackData() {
       plantDataList = [
         { nameTh: "ราชพฤกษ์", nameEn: "Golden Shower Tree", sciName: "Cassia fistula L.", category: "ไม้ยืนต้น", benefits: "ใช้เป็นสมุนไพรพื้นบ้าน ดอกสวยงาม", imageUrl: "https://images.unsplash.com/photo-1596707328905-24c6e9ec1cf5?w=600&auto=format&fit=crop", location: "บริเวณหน้าเสาธง" },
-        { nameTh: "มะม่วง", nameEn: "Mango", sciName: "Mangifera indica L.", category: "ไม้ผล", benefits: "ผลรับประทานได้ ให้ร่มเงา", imageUrl: "https://images.unsplash.com/photo-1553279768-865429fa0078?w=600&auto=format&fit=crop", location: "สวนเกษตรโรงเรียน" },
-        { nameTh: "ชบา", nameEn: "Hibiscus", sciName: "Hibiscus rosa-sinensis L.", category: "ไม้ประดับ", benefits: "ไม้ประดับ ดอกใช้ประโยชน์ได้", imageUrl: "https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?w=600&auto=format&fit=crop", location: "แปลงดอกไม้อาคาร 2" },
-        { nameTh: "ฟ้าทะลายโจร", nameEn: "Andrographis", sciName: "Andrographis paniculata", category: "พืชสมุนไพร", benefits: "สมุนไพรแก้ไข้ บรรเทาอาการหวัด", imageUrl: "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=600&auto=format&fit=crop", location: "แปลงสมุนไพรสาธิต" }
+        { nameTh: "มะม่วง", nameEn: "Mango", sciName: "Mangifera indica L.", category: "ไม้ผล", benefits: "ผลรับประทานได้ ให้ร่มเงา", imageUrl: "https://images.unsplash.com/photo-1553279768-865429fa0078?w=600&auto=format&fit=crop", location: "สวนเกษตรโรงเรียน" }
       ];
       renderPlants(plantDataList);
       updateSummaryStats(plantDataList);
