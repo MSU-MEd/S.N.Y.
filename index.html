@@ -22,75 +22,98 @@
       overflow: hidden !important;
       padding: 0 !important;
     }
-    /* ซ่อน Scrollbar แนวนอนสำหรับปุ่มหมวดหมู่ */
+    /* ซ่อน Scrollbar แนวนอน */
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
 <body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
 
+  <!-- Toast Notification -->
   <div id="toast" class="hidden fixed top-5 right-5 z-50 bg-gray-900 text-white px-5 py-3 rounded-xl shadow-lg transition"></div>
 
   <!-- Navbar -->
   <header class="bg-white border-b sticky top-0 z-40">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-full overflow-hidden bg-white border border-gray-200 shadow-sm flex items-center justify-center shrink-0">
           <img src="https://i.ibb.co/QFRhMP8k/482241588-1141796714409109-574864043437288093-n.jpg" alt="โลโก้โรงเรียน" class="w-full h-full object-contain p-0.5" onerror="this.parentElement.innerHTML='<div class=\'w-full h-full bg-red-800 text-white flex items-center justify-center\'><i class=\'fa-solid fa-tree\'></i></div>'" />
         </div>
         <div>
           <h1 class="text-base font-bold text-red-950 leading-tight">โรงเรียนเทศบาลบ้านส่องนางใย</h1>
-          <p class="text-xs text-gray-500">ฐานข้อมูลพรรณไม้ในโรงเรียน</p>
+          <p class="text-xs text-gray-500">ฐานข้อมูลพรรณไม้และสวนพฤกษศาสตร์โรงเรียน</p>
         </div>
       </div>
       <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-600">
         <a href="#hero" class="text-red-700 font-semibold hover:text-red-800">หน้าหลัก</a>
-        <a href="#plants-section" class="hover:text-red-700">พรรณไม้</a>
-        <a href="#map-section" class="hover:text-red-700">แผนที่ต้นไม้</a>
+        <a href="#plants-section" class="hover:text-red-700">สำรวจพรรณไม้</a>
+        <a href="#map-section" class="hover:text-red-700">แผนที่ดาวเทียม</a>
         <a href="#history-section" class="hover:text-red-700">เกี่ยวกับโรงเรียน</a>
         <button onclick="openAdminModal()" class="bg-red-700 text-white px-4 py-1.5 rounded-full text-xs font-semibold hover:bg-red-800 transition flex items-center gap-1.5 shadow-sm">
           <i class="fa-solid fa-plus"></i> เพิ่มพรรณไม้
         </button>
       </nav>
-      <button onclick="openAdminModal()" class="md:hidden bg-red-700 text-white p-2 rounded-full text-xs">
+      <button onclick="openAdminModal()" class="md:hidden bg-red-700 text-white p-2.5 rounded-full text-xs shadow">
         <i class="fa-solid fa-plus"></i>
       </button>
     </div>
   </header>
 
-  <!-- Hero Section -->
-  <section id="hero" class="relative bg-gradient-to-b from-red-50 to-white pt-12 pb-16 px-4 text-center border-b">
+  <!-- Hero Section พร้อม 3 โลโก้ตรงกลาง -->
+  <section id="hero" class="relative bg-gradient-to-b from-red-50 to-white pt-10 pb-16 px-4 text-center border-b">
     <div class="max-w-3xl mx-auto">
-      <h2 class="text-3xl md:text-4xl font-bold text-red-950">ฐานข้อมูล<span class="text-red-700">พรรณไม้</span>ในโรงเรียน</h2>
-      <p class="text-lg text-gray-700 mt-2 font-medium">โรงเรียนเทศบาลบ้านส่องนางใย</p>
-      <p class="text-sm text-gray-500 mt-1 max-w-lg mx-auto">เรียนรู้ข้อมูลพฤกษศาสตร์ สรรพคุณ และตำแหน่งพิกัดดาวเทียมจริงภายในโรงเรียน</p>
+      
+      <!-- ส่วนแสดง 3 โลโก้กึ่งกลาง -->
+      <div class="flex items-center justify-center gap-3 sm:gap-6 mb-5">
+        <!-- โลโก้ซ้าย -->
+        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white p-1.5 shadow-md border border-gray-200 flex items-center justify-center overflow-hidden hover:scale-105 transition">
+          <img src="https://i.ibb.co/fYjJqXLL/642768993-1941877609748834-2263063250765183521-n-1.jpg" alt="ตราสัญลักษณ์ 1" class="w-full h-full object-contain" />
+        </div>
+
+        <!-- โลโก้กลาง (ตราโรงเรียนเทศบาลบ้านส่องนางใย) -->
+        <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-white p-1.5 shadow-lg border-2 border-red-700 flex items-center justify-center overflow-hidden hover:scale-105 transition ring-4 ring-red-100">
+          <img src="https://i.ibb.co/QFRhMP8k/482241588-1141796714409109-574864043437288093-n.jpg" alt="ตราโรงเรียนเทศบาลบ้านส่องนางใย" class="w-full h-full object-contain" />
+        </div>
+
+        <!-- โลโก้ขวา -->
+        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white p-1.5 shadow-md border border-gray-200 flex items-center justify-center overflow-hidden hover:scale-105 transition">
+          <img src="https://i.ibb.co/WWsXcMHZ/642355807-1941877579748837-136105529239050778-n-1.jpg" alt="ตราสัญลักษณ์ 2" class="w-full h-full object-contain" />
+        </div>
+      </div>
+
+      <span class="inline-block bg-red-100 text-red-800 text-xs font-semibold px-3.5 py-1 rounded-full mb-3 shadow-sm border border-red-200">
+        <i class="fa-solid fa-leaf mr-1"></i> งานสวนพฤกษศาสตร์โรงเรียน
+      </span>
+      <h2 class="text-3xl md:text-4xl font-extrabold text-red-950 tracking-tight">ฐานข้อมูล<span class="text-red-700">พรรณไม้</span>ดิจิทัล</h2>
+      <p class="text-base md:text-lg text-gray-700 mt-2 font-medium">โรงเรียนเทศบาลบ้านส่องนางใย จ.มหาสารคาม</p>
+      <p class="text-xs md:text-sm text-gray-500 mt-1 max-w-lg mx-auto">เรียนรู้ข้อมูลพฤกษศาสตร์ สรรพคุณทางยา และสำรวจพิกัดตำแหน่งจริงผ่านดาวเทียม</p>
       
       <div class="mt-6 max-w-xl mx-auto relative flex items-center">
         <i class="fa-solid fa-magnifying-glass absolute left-4 text-gray-400"></i>
-        <input type="text" id="searchInput" oninput="filterPlants()" placeholder="ค้นหาชื่อต้นไม้ / ชื่อวิทยาศาสตร์ / สรรพคุณ..." 
+        <input type="text" id="searchInput" oninput="filterPlants()" placeholder="ค้นหาชื่อต้นไม้ / ชื่อวิทยาศาสตร์ / สรรพคุณ / หมวดหมู่..." 
                class="w-full pl-11 pr-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-600 bg-white shadow-sm text-sm" />
       </div>
 
       <div class="flex justify-center gap-3 mt-5">
-        <a href="#plants-section" class="bg-red-700 text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-red-800 shadow flex items-center gap-2">
-          <i class="fa-solid fa-leaf"></i> สำรวจพรรณไม้
+        <a href="#plants-section" class="bg-red-700 text-white px-5 py-2 rounded-full text-xs md:text-sm font-medium hover:bg-red-800 shadow flex items-center gap-2 transition">
+          <i class="fa-solid fa-seedling"></i> รายการพรรณไม้
         </a>
-        <a href="#map-section" class="bg-white text-red-700 border border-red-700 px-5 py-2 rounded-full text-sm font-medium hover:bg-red-50 flex items-center gap-2">
-          <i class="fa-solid fa-satellite"></i> แผนที่ดาวเทียม
+        <a href="#map-section" class="bg-white text-red-700 border border-red-700 px-5 py-2 rounded-full text-xs md:text-sm font-medium hover:bg-red-50 flex items-center gap-2 transition">
+          <i class="fa-solid fa-map-location-dot"></i> แผนที่ดาวเทียม
         </a>
       </div>
     </div>
   </section>
 
   <!-- Counter Stats -->
-  <section class="max-w-4xl mx-auto px-4 -mt-8 relative z-20">
+  <section class="max-w-5xl mx-auto px-4 -mt-8 relative z-20">
     <div class="bg-white rounded-3xl md:rounded-full shadow-lg border border-gray-100 py-4 px-6 md:px-12 grid grid-cols-1 md:grid-cols-3 gap-5 items-center">
       <div class="flex items-center justify-center gap-3.5">
         <div class="w-12 h-12 rounded-full bg-red-700 text-white flex items-center justify-center text-lg shrink-0 shadow-sm">
           <i class="fa-solid fa-leaf"></i>
         </div>
         <div>
-          <span class="block text-xs text-gray-500 font-medium">จำนวนพรรณไม้</span>
+          <span class="block text-xs text-gray-500 font-medium">จำนวนพรรณไม้ที่บันทึก</span>
           <div class="flex items-baseline gap-1 mt-0.5">
             <span id="totalCount" class="text-2xl font-black text-gray-900 leading-none">0</span>
             <span class="text-xs font-semibold text-gray-600">ชนิด</span>
@@ -103,7 +126,7 @@
           <i class="fa-solid fa-map-pin"></i>
         </div>
         <div>
-          <span class="block text-xs text-gray-500 font-medium">จุดพิกัดบนแผนที่</span>
+          <span class="block text-xs text-gray-500 font-medium">จุดพิกัดหมุดดาวเทียม</span>
           <div class="flex items-baseline gap-1 mt-0.5">
             <span id="spotsCount" class="text-2xl font-black text-gray-900 leading-none">0</span>
             <span class="text-xs font-semibold text-gray-600">จุด</span>
@@ -116,10 +139,10 @@
           <i class="fa-solid fa-shapes"></i>
         </div>
         <div>
-          <span class="block text-xs text-gray-500 font-medium">หมวดหมู่</span>
+          <span class="block text-xs text-gray-500 font-medium">หมวดหมู่พรรณไม้</span>
           <div class="flex items-baseline gap-1 mt-0.5">
             <span id="categoriesCount" class="text-2xl font-black text-gray-900 leading-none">0</span>
-            <span class="text-xs font-semibold text-gray-600">ประเภท</span>
+            <span class="text-xs font-semibold text-gray-600">หมวดหมู่</span>
           </div>
         </div>
       </div>
@@ -127,113 +150,146 @@
   </section>
 
   <!-- Plants Section -->
-  <section id="plants-section" class="max-w-6xl mx-auto px-4 py-12 flex-grow w-full">
-    <div class="flex items-center justify-between mb-4">
-      <h3 class="text-xl font-bold text-gray-900 border-l-4 border-red-700 pl-3">พรรณไม้ในโรงเรียน</h3>
-      <div id="statusIndicator" class="text-xs text-gray-400 flex items-center gap-1.5">
-        <span id="statusDot" class="w-2 h-2 rounded-full bg-green-500 inline-block"></span>
+  <section id="plants-section" class="max-w-7xl mx-auto px-4 py-12 flex-grow w-full">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+      <div>
+        <h3 class="text-2xl font-bold text-gray-900 border-l-4 border-red-700 pl-3">ทำเนียบพรรณไม้ในโรงเรียน</h3>
+        <p class="text-xs text-gray-500 pl-4 mt-0.5">เลือกคลิกดูตามประเภทพืช หรือค้นหาพรรณไม้ที่ต้องการศึกษา</p>
+      </div>
+      <div id="statusIndicator" class="text-xs text-gray-400 flex items-center gap-1.5 pl-3 sm:pl-0">
+        <span id="statusDot" class="w-2.5 h-2.5 rounded-full bg-green-500 inline-block"></span>
         <span id="statusText">ซิงค์ข้อมูลเรียบร้อย</span>
       </div>
     </div>
 
-    <!-- ปุ่มตัวเลือกหมวดหมู่ / ชนิดต้นไม้ -->
-    <div class="flex items-center gap-2 overflow-x-auto pb-2 mb-6 no-scrollbar" id="categoryFilterContainer">
+    <!-- ปุ่มตัวเลือกหมวดหมู่ 10 หมวดหลัก -->
+    <div class="flex items-center gap-2 overflow-x-auto pb-3 mb-6 no-scrollbar" id="categoryFilterContainer">
       <button type="button" onclick="setCategoryFilter('ทั้งหมด', this)" class="category-btn active px-4 py-2 rounded-full text-xs font-semibold transition whitespace-nowrap bg-red-700 text-white border border-red-700 shadow-sm flex items-center gap-1.5">
         <i class="fa-solid fa-border-all"></i> ทั้งหมด
       </button>
       <button type="button" onclick="setCategoryFilter('ไม้ยืนต้น', this)" class="category-btn px-4 py-2 rounded-full text-xs font-medium transition whitespace-nowrap bg-white text-gray-600 hover:bg-red-50 hover:text-red-700 border border-gray-200 shadow-sm flex items-center gap-1.5">
         <i class="fa-solid fa-tree text-green-700"></i> ไม้ยืนต้น
       </button>
-      <button type="button" onclick="setCategoryFilter('ไม้ประดับ', this)" class="category-btn px-4 py-2 rounded-full text-xs font-medium transition whitespace-nowrap bg-white text-gray-600 hover:bg-red-50 hover:text-red-700 border border-gray-200 shadow-sm flex items-center gap-1.5">
-        <i class="fa-solid fa-seedling text-emerald-500"></i> ไม้ประดับ
+      <button type="button" onclick="setCategoryFilter('ไม้พุ่ม', this)" class="category-btn px-4 py-2 rounded-full text-xs font-medium transition whitespace-nowrap bg-white text-gray-600 hover:bg-red-50 hover:text-red-700 border border-gray-200 shadow-sm flex items-center gap-1.5">
+        <i class="fa-solid fa-spa text-emerald-600"></i> ไม้พุ่ม
+      </button>
+      <button type="button" onclick="setCategoryFilter('ไม้ล้มลุก', this)" class="category-btn px-4 py-2 rounded-full text-xs font-medium transition whitespace-nowrap bg-white text-gray-600 hover:bg-red-50 hover:text-red-700 border border-gray-200 shadow-sm flex items-center gap-1.5">
+        <i class="fa-solid fa-seedling text-teal-600"></i> ไม้ล้มลุก
+      </button>
+      <button type="button" onclick="setCategoryFilter('ไม้เลื้อย / ไม้เถา', this)" class="category-btn px-4 py-2 rounded-full text-xs font-medium transition whitespace-nowrap bg-white text-gray-600 hover:bg-red-50 hover:text-red-700 border border-gray-200 shadow-sm flex items-center gap-1.5">
+        <i class="fa-solid fa-arrows-split-up-and-left text-lime-600"></i> ไม้เลื้อย / ไม้เถา
+      </button>
+      <button type="button" onclick="setCategoryFilter('ไม้ดอกไม้ประดับ', this)" class="category-btn px-4 py-2 rounded-full text-xs font-medium transition whitespace-nowrap bg-white text-gray-600 hover:bg-red-50 hover:text-red-700 border border-gray-200 shadow-sm flex items-center gap-1.5">
+        <i class="fa-solid fa-clover text-pink-500"></i> ไม้ดอกไม้ประดับ
       </button>
       <button type="button" onclick="setCategoryFilter('พืชสมุนไพร', this)" class="category-btn px-4 py-2 rounded-full text-xs font-medium transition whitespace-nowrap bg-white text-gray-600 hover:bg-red-50 hover:text-red-700 border border-gray-200 shadow-sm flex items-center gap-1.5">
         <i class="fa-solid fa-mortar-pestle text-amber-600"></i> พืชสมุนไพร
       </button>
-      <button type="button" onclick="setCategoryFilter('ไม้ผล', this)" class="category-btn px-4 py-2 rounded-full text-xs font-medium transition whitespace-nowrap bg-white text-gray-600 hover:bg-red-50 hover:text-red-700 border border-gray-200 shadow-sm flex items-center gap-1.5">
-        <i class="fa-solid fa-apple-whole text-red-500"></i> ไม้ผล
+      <button type="button" onclick="setCategoryFilter('ไม้ผล / ผักสวนครัว', this)" class="category-btn px-4 py-2 rounded-full text-xs font-medium transition whitespace-nowrap bg-white text-gray-600 hover:bg-red-50 hover:text-red-700 border border-gray-200 shadow-sm flex items-center gap-1.5">
+        <i class="fa-solid fa-apple-whole text-red-500"></i> ไม้ผล / ผักสวนครัว
+      </button>
+      <button type="button" onclick="setCategoryFilter('พืชตระกูลปาล์มและไผ่', this)" class="category-btn px-4 py-2 rounded-full text-xs font-medium transition whitespace-nowrap bg-white text-gray-600 hover:bg-red-50 hover:text-red-700 border border-gray-200 shadow-sm flex items-center gap-1.5">
+        <i class="fa-solid fa-fan text-yellow-700"></i> ปาล์มและไผ่
+      </button>
+      <button type="button" onclick="setCategoryFilter('พืชน้ำ', this)" class="category-btn px-4 py-2 rounded-full text-xs font-medium transition whitespace-nowrap bg-white text-gray-600 hover:bg-red-50 hover:text-red-700 border border-gray-200 shadow-sm flex items-center gap-1.5">
+        <i class="fa-solid fa-droplet text-cyan-600"></i> พืชน้ำ
+      </button>
+      <button type="button" onclick="setCategoryFilter('กล้วยไม้และเฟิร์น', this)" class="category-btn px-4 py-2 rounded-full text-xs font-medium transition whitespace-nowrap bg-white text-gray-600 hover:bg-red-50 hover:text-red-700 border border-gray-200 shadow-sm flex items-center gap-1.5">
+        <i class="fa-solid fa-feather-pointed text-purple-600"></i> กล้วยไม้และเฟิร์น
       </button>
     </div>
 
     <div id="plantGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
   </section>
 
-  <!-- Satellite Map Section -->
-  <section class="max-w-6xl mx-auto px-4 py-6 w-full">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-      <div id="map-section" class="lg:col-span-7 bg-white p-6 rounded-3xl shadow-sm border flex flex-col justify-between">
+  <!-- Big Satellite Map Section (Responsive + ป้องกันดูดนิ้วบนมือถือ) -->
+  <section id="map-section" class="max-w-7xl mx-auto px-4 py-6 w-full">
+    <div class="bg-white p-5 sm:p-8 rounded-3xl shadow-sm border border-gray-200">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4">
         <div>
-          <div class="flex items-center justify-between mb-2">
-            <div>
-              <h4 class="text-lg font-bold text-gray-900 flex items-center gap-2">
-                <i class="fa-solid fa-satellite text-red-700"></i> แผนที่พิกัดพรรณไม้ (Google Satellite)
-              </h4>
-              <p class="text-xs text-gray-500">คลิกที่หมุดสีแดงเพื่อเปิดดูข้อมูลและภาพต้นไม้แต่ละจุด</p>
-            </div>
-            <span class="hidden sm:inline-block text-[11px] bg-red-50 text-red-800 border border-red-200 px-2.5 py-1 rounded-full font-semibold">
-              Google Hybrid
-            </span>
-          </div>
-
-          <div id="realSchoolMap" class="h-80 w-full rounded-2xl border border-gray-200 overflow-hidden shadow-inner mt-3 z-10"></div>
+          <h4 class="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2.5">
+            <i class="fa-solid fa-satellite text-red-700"></i> แผนที่ดาวเทียมระบุพิกัดพรรณไม้ (Satellite GIS)
+          </h4>
+          <p class="text-xs sm:text-sm text-gray-500 mt-1">
+            สำรวจตำแหน่งต้นไม้จริงภายในพื้นที่โรงเรียน แตะที่หมุดสีแดงเพื่อดูรูปภาพและข้อมูลพฤกษศาสตร์
+          </p>
         </div>
-
-        <div class="mt-4 flex items-center justify-between text-xs text-gray-500 border-t pt-3">
-          <span><i class="fa-solid fa-circle-info text-red-700 mr-1"></i> คลิกที่หมุดเพื่อดูข้อมูลต้นไม้</span>
-          <button onclick="resetMapView()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-full font-medium transition flex items-center gap-1.5">
+        <div class="flex items-center gap-2 shrink-0">
+          <span class="inline-flex items-center gap-1.5 text-xs bg-red-50 text-red-800 border border-red-200 px-3 py-1.5 rounded-full font-semibold">
+            <i class="fa-solid fa-layer-group text-red-600"></i> แผนที่ผสมดาวเทียม
+          </span>
+          <button onclick="resetMapView()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3.5 py-1.5 rounded-full text-xs font-medium transition flex items-center gap-1.5 shadow-sm">
             <i class="fa-solid fa-crosshairs text-red-700"></i> จุดกึ่งกลางโรงเรียน
           </button>
         </div>
       </div>
 
-      <div id="history-section" class="lg:col-span-5 bg-white p-6 rounded-3xl shadow-sm border flex flex-col justify-between">
-        <div>
-          <h4 class="text-lg font-bold text-gray-900 mb-1 flex items-center gap-2">
-            <i class="fa-solid fa-school text-red-700"></i> ประวัติโรงเรียนโดยสังเขป
-          </h4>
-          <p class="text-xs text-gray-600 leading-relaxed mt-3">
-            <strong>โรงเรียนเทศบาลบ้านส่องนางใย</strong> มุ่งส่งเสริมการพัฒนาผู้เรียนควบคู่กับการอนุรักษ์สิ่งแวดล้อม และพัฒนาแหล่งเรียนรู้ทางธรรมชาติภายในโรงเรียน
-          </p>
-          <p class="text-xs text-gray-600 leading-relaxed mt-2">
-            โครงการฐานข้อมูลพรรณไม้นี้จัดทำขึ้นเพื่อให้เยาวชนและผู้สนใจได้ศึกษาคุณค่าของพืชพรรณผ่านระบบดิจิทัล ปักหมุดระบุพิกัดดาวเทียม GPS เชื่อมโยงการเรียนรู้จริง
-          </p>
+      <!-- แผนที่ Responsive: มือถือสูง 380px / คอมพิวเตอร์สูง 540px -->
+      <div id="realSchoolMap" class="h-[380px] sm:h-[540px] w-full rounded-2xl border border-gray-300 overflow-hidden shadow-inner relative z-10"></div>
+
+      <div class="mt-4 flex flex-col sm:flex-row sm:items-center justify-between text-xs text-gray-500 gap-2 pt-2 border-t">
+        <span class="flex items-center gap-1.5">
+          <i class="fa-solid fa-circle-info text-red-700"></i> 
+          บนมือถือใช้นิ้วเดียวเลื่อนหน้าเว็บได้ตามปกติ หากต้องการเลื่อนดูแผนที่ให้ใช้ 2 นิ้ว
+        </span>
+        <span class="text-gray-400">พิกัดอ้างอิง: 16.17052° N, 103.32186° E</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- History & About Section -->
+  <section id="history-section" class="max-w-7xl mx-auto px-4 py-6 w-full">
+    <div class="bg-gradient-to-r from-red-900 to-red-950 text-white p-6 sm:p-8 rounded-3xl shadow-md grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+      <div class="md:col-span-2 space-y-3">
+        <div class="inline-flex items-center gap-2 bg-red-800/60 px-3 py-1 rounded-full text-xs font-semibold text-red-200 border border-red-700/50">
+          <i class="fa-solid fa-school"></i> สวนพฤกษศาสตร์โรงเรียน
         </div>
-        <div class="mt-5 pt-4 border-t flex items-center gap-3 text-xs text-gray-500">
-          <i class="fa-solid fa-award text-red-700 text-lg"></i>
-          <span>โครงการงานสวนพฤกษศาสตร์โรงเรียน และการเรียนรู้ดิจิทัล</span>
+        <h3 class="text-xl sm:text-2xl font-bold">โรงเรียนเทศบาลบ้านส่องนางใย</h3>
+        <p class="text-xs sm:text-sm text-red-100 leading-relaxed font-light">
+          มุ่งส่งเสริมและปลูกฝังจิตสำนึกให้ผู้เรียนเห็นคุณค่าของธรรมชาติและสิ่งแวดล้อม โครงการฐานข้อมูลพรรณไม้นี้จัดทำขึ้นเพื่อเป็นแหล่งเรียนรู้ดิจิทัล (Digital Botanical Garden) ที่บูรณาการเทคโนโลยีสารสนเทศร่วมกับงานพฤกษศาสตร์ เพื่อให้ครู นักเรียน และชุมชนได้สืบค้นข้อมูลพืชพรรณและตำแหน่งพิกัด GPS จริงได้อย่างสะดวกรวดเร็ว
+        </p>
+      </div>
+      <div class="bg-white/10 p-5 rounded-2xl border border-white/10 backdrop-blur-sm text-left space-y-2.5">
+        <div class="flex items-center gap-3 text-red-200">
+          <i class="fa-solid fa-award text-2xl text-red-300"></i>
+          <div>
+            <h5 class="text-sm font-bold text-white">แหล่งเรียนรู้มีชีวิต</h5>
+            <p class="text-xs text-red-200">เพื่อการอนุรักษ์พันธุกรรมพืช</p>
+          </div>
+        </div>
+        <div class="text-xs text-red-200 space-y-1 pt-2 border-t border-white/10">
+          <p><i class="fa-solid fa-location-dot mr-1 text-red-300"></i> อ.เมือง จ.มหาสารคาม 44000</p>
+          <p><i class="fa-solid fa-phone mr-1 text-red-300"></i> 043-725573-6</p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer class="bg-red-950 text-white py-8 mt-12">
-    <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-6 items-center text-xs">
+  <footer class="bg-gray-950 text-white py-8 mt-auto border-t border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-gray-400 text-center sm:text-left">
       <div>
-        <h5 class="text-base font-bold">โรงเรียนเทศบาลบ้านส่องนางใย</h5>
-        <p class="text-red-200 mt-1">เว็บไซต์แหล่งเรียนรู้พรรณไม้ภายในโรงเรียน</p>
+        <p class="font-semibold text-gray-200">โรงเรียนเทศบาลบ้านส่องนางใย เทศบาลเมืองมหาสารคาม</p>
+        <p class="text-gray-500 mt-0.5">ระบบฐานข้อมูลพรรณไม้และแผนที่ดาวเทียมเพื่อการศึกษา</p>
       </div>
-      <div class="md:text-right space-y-1 text-red-200">
-        <p><i class="fa-solid fa-location-dot mr-1"></i> ตำบลตลาด อำเภอเมือง จังหวัดมหาสารคาม 44000</p>
-        <p><i class="fa-solid fa-phone mr-1"></i> โทรศัพท์: 043-725573-6</p>
-      </div>
+      <p class="text-gray-500">© สาขาวิชาคณิตศาสตร์ คณะศึกษาศาสตร์ มหาวิทยาลัยมหาสารคาม</p>
     </div>
   </footer>
 
   <!-- Detail Modal -->
   <div id="detailModal" class="hidden fixed inset-0 bg-black/75 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
     <div class="bg-white max-w-lg w-full rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-      <div class="relative w-full h-72 bg-gray-900 flex items-center justify-center overflow-hidden">
+      <div class="relative w-full h-64 sm:h-72 bg-gray-900 flex items-center justify-center overflow-hidden">
         <img id="modalImgTag" src="" alt="" class="w-full h-full object-cover" />
         <button onclick="closeDetailModal()" class="absolute top-3 right-3 w-9 h-9 bg-black/50 hover:bg-black/80 text-white rounded-full flex items-center justify-center transition">
           <i class="fa-solid fa-xmark text-sm"></i>
         </button>
       </div>
       
-      <div class="p-6 overflow-y-auto">
+      <div class="p-5 sm:p-6 overflow-y-auto">
         <div class="flex justify-between items-start gap-3">
           <div>
-            <h3 id="modalNameTh" class="text-2xl font-bold text-gray-900"></h3>
+            <h3 id="modalNameTh" class="text-xl sm:text-2xl font-bold text-gray-900"></h3>
             <p id="modalNameEn" class="text-sm text-red-700 font-semibold"></p>
             <p id="modalSciName" class="text-xs italic text-gray-500 mt-0.5"></p>
           </div>
@@ -259,7 +315,7 @@
 
   <!-- Admin Modal -->
   <div id="adminModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-    <div class="bg-white max-w-lg w-full rounded-2xl p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+    <div class="bg-white max-w-xl w-full rounded-2xl p-5 sm:p-6 shadow-2xl max-h-[92vh] overflow-y-auto">
       <div class="flex justify-between items-center pb-3 border-b">
         <h3 class="text-lg font-bold text-red-950 flex items-center gap-2">
           <i class="fa-solid fa-plus-circle text-red-700"></i> เพิ่มข้อมูลพรรณไม้ใหม่
@@ -267,13 +323,13 @@
         <button onclick="closeAdminModal()" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
       </div>
 
-      <form id="addPlantForm" onsubmit="submitPlantForm(event)" class="mt-4 space-y-3 text-sm">
+      <form id="addPlantForm" onsubmit="submitPlantForm(event)" class="mt-4 space-y-3.5 text-sm">
         <div>
           <label class="block text-xs font-semibold text-gray-700 mb-1">รหัสผ่านแอดมิน *</label>
           <input type="password" id="adminPassword" required class="w-full px-3 py-2 border rounded-lg focus:ring-1 focus:ring-red-600 outline-none" placeholder="ป้อนรหัสผ่านก่อนบันทึก" />
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-semibold text-gray-700 mb-1">ชื่อต้นไม้ (ภาษาไทย) *</label>
             <input type="text" id="formNameTh" required class="w-full px-3 py-2 border rounded-lg focus:ring-1 focus:ring-red-600 outline-none" placeholder="เช่น ราชพฤกษ์" />
@@ -284,18 +340,24 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-semibold text-gray-700 mb-1">ชื่อวิทยาศาสตร์</label>
             <input type="text" id="formSciName" class="w-full px-3 py-2 border rounded-lg focus:ring-1 focus:ring-red-600 outline-none" placeholder="เช่น Cassia fistula L." />
           </div>
           <div>
-            <label class="block text-xs font-semibold text-gray-700 mb-1">หมวดหมู่</label>
-            <select id="formCategory" class="w-full px-3 py-2 border rounded-lg focus:ring-1 focus:ring-red-600 outline-none bg-white">
+            <label class="block text-xs font-semibold text-gray-700 mb-1">หมวดหมู่พรรณไม้ *</label>
+            <select id="formCategory" class="w-full px-3 py-2 border rounded-lg focus:ring-1 focus:ring-red-600 outline-none bg-white font-medium text-gray-700">
               <option value="ไม้ยืนต้น">ไม้ยืนต้น</option>
-              <option value="ไม้ประดับ">ไม้ประดับ</option>
+              <option value="ไม้พุ่ม">ไม้พุ่ม</option>
+              <option value="ไม้ล้มลุก">ไม้ล้มลุก</option>
+              <option value="ไม้เลื้อย / ไม้เถา">ไม้เลื้อย / ไม้เถา</option>
+              <option value="ไม้ดอกไม้ประดับ">ไม้ดอกไม้ประดับ</option>
               <option value="พืชสมุนไพร">พืชสมุนไพร</option>
-              <option value="ไม้ผล">ไม้ผล</option>
+              <option value="ไม้ผล / ผักสวนครัว">ไม้ผล / ผักสวนครัว</option>
+              <option value="พืชตระกูลปาล์มและไผ่">พืชตระกูลปาล์มและไผ่</option>
+              <option value="พืชน้ำ">พืชน้ำ</option>
+              <option value="กล้วยไม้และเฟิร์น">กล้วยไม้และเฟิร์น</option>
             </select>
           </div>
         </div>
@@ -307,37 +369,38 @@
 
         <div>
           <label class="block text-xs font-semibold text-gray-700 mb-1">จุดติดตั้ง / ตำแหน่งในโรงเรียน</label>
-          <input type="text" id="formLocation" class="w-full px-3 py-2 border rounded-lg focus:ring-1 focus:ring-red-600 outline-none" placeholder="เช่น บริเวณหน้าเสาธง, สวนเกษตร" />
+          <input type="text" id="formLocation" class="w-full px-3 py-2 border rounded-lg focus:ring-1 focus:ring-red-600 outline-none" placeholder="เช่น หน้าเสาธง, สวนเกษตรพอเพียง" />
         </div>
 
         <!-- กล่องพิกัดพร้อมแผนที่เลือกจุด -->
-        <div class="bg-red-50/70 p-3.5 rounded-xl border border-red-100 space-y-2.5">
+        <div class="bg-red-50/70 p-4 rounded-2xl border border-red-100 space-y-3">
           <div class="flex justify-between items-center">
             <span class="text-xs font-bold text-gray-800 flex items-center gap-1.5">
-              <i class="fa-solid fa-location-crosshairs text-red-700"></i> ระบุพิกัด GPS (แตะบนแผนที่ได้เลย)
+              <i class="fa-solid fa-location-crosshairs text-red-700"></i> ระบุพิกัด GPS
             </span>
-            <button type="button" onclick="fillDefaultCoords()" class="text-[11px] text-gray-500 hover:text-red-700 underline">จุดกลางโรงเรียน</button>
+            <button type="button" onclick="fillDefaultCoords()" class="text-[11px] text-red-700 hover:underline font-medium">จุดกึ่งกลางโรงเรียน</button>
           </div>
 
           <button type="button" onclick="getCurrentGPS()" id="gpsBtn"
-                  class="w-full py-2 px-3 bg-red-700 text-white rounded-xl text-xs font-semibold hover:bg-red-800 transition flex items-center justify-center gap-2 shadow-sm">
+                  class="w-full py-2.5 px-3 bg-red-700 text-white rounded-xl text-xs font-semibold hover:bg-red-800 transition flex items-center justify-center gap-2 shadow-sm">
             <i class="fa-solid fa-satellite-dish"></i>
-            <span id="gpsBtnText">แตะเพื่อดึงพิกัดจาก GPS มือถือ (ความแม่นยำสูง)</span>
+            <span id="gpsBtnText">แตะเพื่อดึงพิกัดจาก GPS มือถือ (ณ จุดที่ยืนจริง)</span>
           </button>
 
-          <!-- แผนที่ย่อสำหรับจิ้มเลือกพิกัดโดยตรง -->
           <div class="relative">
-            <div id="pickerMap" class="h-44 w-full rounded-xl border border-gray-300 overflow-hidden shadow-inner"></div>
-            <p class="text-[10px] text-gray-500 mt-1 text-center">* สามารถคลิกบนแผนที่หรือลากหมุดเพื่อระบุตำแหน่งต้นไม้จริงได้ทันที</p>
+            <div id="pickerMap" class="h-52 sm:h-60 w-full rounded-xl border border-gray-300 overflow-hidden shadow-inner"></div>
+            <p class="text-[11px] text-gray-500 mt-1.5 text-center">
+              <i class="fa-solid fa-hand-pointer text-red-700 mr-1"></i> แตะบนแผนที่หรือลากหมุดเพื่อระบุตำแหน่งต้นไม้
+            </p>
           </div>
 
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block text-[10px] text-gray-500 mb-0.5">ละติจูด (Lat)</label>
+              <label class="block text-[10px] text-gray-500 mb-0.5 font-medium">ละติจูด (Lat)</label>
               <input type="text" id="formLat" placeholder="16.17052" class="w-full px-2.5 py-1.5 text-xs border rounded-lg bg-white" onchange="syncPickerFromInputs()" />
             </div>
             <div>
-              <label class="block text-[10px] text-gray-500 mb-0.5">ลองจิจูด (Lng)</label>
+              <label class="block text-[10px] text-gray-500 mb-0.5 font-medium">ลองจิจูด (Lng)</label>
               <input type="text" id="formLng" placeholder="103.32186" class="w-full px-2.5 py-1.5 text-xs border rounded-lg bg-white" onchange="syncPickerFromInputs()" />
             </div>
           </div>
@@ -353,9 +416,9 @@
           </div>
         </div>
 
-        <div class="pt-3 flex justify-end gap-2">
+        <div class="pt-3 flex justify-end gap-2 border-t">
           <button type="button" onclick="closeAdminModal()" class="px-4 py-2 border rounded-lg text-xs hover:bg-gray-50">ยกเลิก</button>
-          <button type="submit" id="submitBtn" class="px-5 py-2 bg-red-700 text-white rounded-lg text-xs font-semibold hover:bg-red-800 transition">
+          <button type="submit" id="submitBtn" class="px-6 py-2 bg-red-700 text-white rounded-lg text-xs font-semibold hover:bg-red-800 transition shadow">
             บันทึกข้อมูล
           </button>
         </div>
@@ -364,8 +427,8 @@
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzhCAGOj4t0-2-Ewn35zVEUsXFMmF4tDgLAunZfMqb2S2TiEYiQXg99kJUH-dcF3IZw/exec";
-    const CACHE_STORAGE_KEY = "songnangyai_plants_v9";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwuXiZGfd0sxhdflGrWXgnslxkuZ4ho8FoIksQifnh3_hxl4PRIyKfT9wGpRLd6uu4h/exec";
+    const CACHE_STORAGE_KEY = "songnangyai_plants_v10";
     const SCHOOL_COORDS = { lat: 16.17052, lng: 103.32186 };
 
     let plantDataList = [];
@@ -375,21 +438,19 @@
     let currentOpenInfoWindow = null;
     let selectedCategory = "ทั้งหมด";
 
-    // Mini Map Picker (Google Maps)
     let pickerMapInstance = null;
     let pickerMarker = null;
 
-    // ไอคอนหมุดต้นไม้สีแดงแบบ SVG
     const treeMarkerIcon = {
       url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
-        <svg xmlns="http://www.w3.org/2000/svg" width="34" height="42" viewBox="0 0 34 42">
+        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="46" viewBox="0 0 34 42">
           <path d="M17 0 C7.6 0 0 7.6 0 17 C0 26.5 17 42 17 42 C17 42 34 26.5 34 17 C34 7.6 26.4 0 17 0 Z" fill="#b91c1c" stroke="#ffffff" stroke-width="2"/>
           <path d="M17 8 L11 16 L14 16 L9 23 L15 23 L15 27 L19 27 L19 23 L25 23 L20 16 L23 16 Z" fill="#ffffff"/>
         </svg>
       `),
-      scaledSize: new google.maps.Size(34, 42),
-      anchor: new google.maps.Point(17, 42),
-      popupAnchor: new google.maps.Point(0, -38)
+      scaledSize: new google.maps.Size(36, 46),
+      anchor: new google.maps.Point(18, 46),
+      popupAnchor: new google.maps.Point(0, -42)
     };
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -420,6 +481,7 @@
         zoom: 18,
         mapTypeId: 'hybrid',
         tilt: 0,
+        gestureHandling: 'cooperative',
         mapTypeControl: false,
         streetViewControl: false,
         fullscreenControl: true
@@ -438,6 +500,7 @@
         zoom: 18,
         mapTypeId: 'hybrid',
         tilt: 0,
+        gestureHandling: 'cooperative',
         mapTypeControl: false,
         streetViewControl: false
       });
@@ -500,7 +563,6 @@
     function updateMapMarkers(plants) {
       if (!mapInstance) return;
 
-      // ล้างหมุดเดิม
       markersList.forEach(m => m.setMap(null));
       markersList = [];
 
@@ -512,14 +574,15 @@
         const imgUrl = optimizeImageUrl(plant.imageUrl);
 
         const contentString = `
-          <div style="font-family: 'Kanit', sans-serif; text-align: center; max-width: 170px; padding: 4px;">
+          <div style="font-family: 'Kanit', sans-serif; text-align: center; max-width: 175px; padding: 4px;">
             <div style="width: 100%; height: 95px; border-radius: 8px; overflow: hidden; margin-bottom: 6px; background-color: #f3f4f6;">
               <img src="${imgUrl}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=600'" />
             </div>
             <h5 style="font-weight: bold; color: #111827; font-size: 13px; margin: 0;">${plant.nameTh || 'ต้นไม้'}</h5>
-            <p style="font-size: 10px; color: #b91c1c; font-style: italic; margin: 2px 0;">${plant.nameEn || ''}</p>
-            <p style="font-size: 10px; color: #6b7280; margin-bottom: 6px;">${plant.location || 'ในโรงเรียน'}</p>
-            <button onclick="openDetailModal(${originalIndex})" style="background-color: #b91c1c; color: white; border: none; border-radius: 9999px; padding: 3px 12px; font-size: 10px; font-weight: 600; cursor: pointer;">
+            <p style="font-size: 11px; color: #b91c1c; font-style: italic; margin: 2px 0;">${plant.nameEn || ''}</p>
+            <span style="display:inline-block; font-size: 10px; background:#fef2f2; color:#991b1b; padding:1px 6px; border-radius:9999px; margin-bottom:4px;">${plant.category || 'ทั่วไป'}</span>
+            <p style="font-size: 10px; color: #6b7280; margin-bottom: 8px;">${plant.location || 'ในโรงเรียน'}</p>
+            <button onclick="openDetailModal(${originalIndex})" style="background-color: #b91c1c; color: white; border: none; border-radius: 9999px; padding: 4px 14px; font-size: 10px; font-weight: 600; cursor: pointer;">
               ดูข้อมูล
             </button>
           </div>
@@ -570,7 +633,7 @@
           if (currentOpenInfoWindow) currentOpenInfoWindow.close();
           plant._infoWindow.open(mapInstance, plant._marker);
           currentOpenInfoWindow = plant._infoWindow;
-        }, 400);
+        }, 450);
       }
     }
 
@@ -624,7 +687,7 @@
     function renderPlants(plants) {
       const grid = document.getElementById('plantGrid');
       if (!plants.length) {
-        grid.innerHTML = `<div class="col-span-full py-12 text-center text-gray-400 text-sm">ไม่พบข้อมูลพรรณไม้ในหมวดหมู่นี้</div>`;
+        grid.innerHTML = `<div class="col-span-full py-16 text-center text-gray-400 text-sm">ไม่พบข้อมูลพรรณไม้ในหมวดหมู่นี้</div>`;
         return;
       }
 
@@ -632,7 +695,7 @@
         const originalIndex = plantDataList.indexOf(plant);
         const imgUrl = optimizeImageUrl(plant.imageUrl);
         return `
-          <div class="bg-white rounded-2xl overflow-hidden shadow-sm border hover:shadow-md transition flex flex-col justify-between group">
+          <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition flex flex-col justify-between group">
             <div>
               <div class="aspect-[4/3] w-full bg-gray-100 overflow-hidden relative border-b">
                 <img src="${imgUrl}" alt="${plant.nameTh}" loading="lazy" 
@@ -685,11 +748,13 @@
           (p.nameEn && p.nameEn.toLowerCase().includes(q)) ||
           (p.sciName && p.sciName.toLowerCase().includes(q)) ||
           (p.benefits && p.benefits.toLowerCase().includes(q)) ||
-          (p.location && p.location.toLowerCase().includes(q));
+          (p.location && p.location.toLowerCase().includes(q)) ||
+          (cat && cat.toLowerCase().includes(q));
         
         return matchCategory && matchSearch;
       });
       renderPlants(filtered);
+      updateMapMarkers(filtered);
     }
 
     function fillDefaultCoords() {
@@ -715,12 +780,12 @@
             pickerMarker.setPosition(currentPos);
             pickerMapInstance.setCenter(currentPos);
           }
-          btnText.innerText = 'แตะเพื่อดึงพิกัดจาก GPS มือถือ (ความแม่นยำสูง)';
+          btnText.innerText = 'แตะเพื่อดึงพิกัดจาก GPS มือถือ (ณ จุดที่ยืนจริง)';
           showToast(`ดึงพิกัดสำเร็จ (ความแม่นยำ ±${Math.round(pos.coords.accuracy)} เมตร)`);
         },
         (err) => {
-          btnText.innerText = 'แตะเพื่อดึงพิกัดจาก GPS มือถือ (ความแม่นยำสูง)';
-          alert('ไม่สามารถดึงตำแหน่งได้: กรุณาเปิด Location และอนุญาตการเข้าถึงพิกัด');
+          btnText.innerText = 'แตะเพื่อดึงพิกัดจาก GPS มือถือ (ณ จุดที่ยืนจริง)';
+          alert('ไม่สามารถดึงตำแหน่งได้: กรุณาเปิด Location ในมือถือและอนุญาตการเข้าถึงพิกัด');
         },
         {
           enableHighAccuracy: true,
