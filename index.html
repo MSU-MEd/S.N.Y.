@@ -8,25 +8,19 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   
-  <!-- Leaflet.js (แผนที่ดาวเทียม) -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- Google Maps JavaScript API -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAJv55q0XBjPMyS_GV9cabQbij18_zFowA&libraries=places"></script>
 
   <style>
     body { font-family: 'Kanit', sans-serif; }
-    .leaflet-popup-content-wrapper {
-      border-radius: 1rem;
-      padding: 0.25rem;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+    .gm-style .gm-style-iw-c {
+      border-radius: 1rem !important;
+      padding: 10px !important;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25) !important;
     }
-    .leaflet-popup-content {
-      margin: 8px 12px;
-      line-height: 1.4;
-      font-family: 'Kanit', sans-serif;
-    }
-    .custom-map-pin {
-      background: transparent;
-      border: none;
+    .gm-style .gm-style-iw-d {
+      overflow: hidden !important;
+      padding: 0 !important;
     }
     /* ซ่อน Scrollbar แนวนอนสำหรับปุ่มหมวดหมู่ */
     .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -172,12 +166,12 @@
           <div class="flex items-center justify-between mb-2">
             <div>
               <h4 class="text-lg font-bold text-gray-900 flex items-center gap-2">
-                <i class="fa-solid fa-satellite text-red-700"></i> แผนที่พิกัดพรรณไม้ (ภาพถ่ายดาวเทียม)
+                <i class="fa-solid fa-satellite text-red-700"></i> แผนที่พิกัดพรรณไม้ (Google Satellite)
               </h4>
               <p class="text-xs text-gray-500">คลิกที่หมุดสีแดงเพื่อเปิดดูข้อมูลและภาพต้นไม้แต่ละจุด</p>
             </div>
             <span class="hidden sm:inline-block text-[11px] bg-red-50 text-red-800 border border-red-200 px-2.5 py-1 rounded-full font-semibold">
-              Live Satellite
+              Google Hybrid
             </span>
           </div>
 
@@ -331,9 +325,10 @@
             <span id="gpsBtnText">แตะเพื่อดึงพิกัดจาก GPS มือถือ (ความแม่นยำสูง)</span>
           </button>
 
+          <!-- แผนที่ย่อสำหรับจิ้มเลือกพิกัดโดยตรง -->
           <div class="relative">
             <div id="pickerMap" class="h-44 w-full rounded-xl border border-gray-300 overflow-hidden shadow-inner"></div>
-            <p class="text-[10px] text-gray-500 mt-1 text-center">* สามารถคลิกหรือลากหมุดบนแผนที่เพื่อระบุตำแหน่งต้นไม้จริงได้ทันที</p>
+            <p class="text-[10px] text-gray-500 mt-1 text-center">* สามารถคลิกบนแผนที่หรือลากหมุดเพื่อระบุตำแหน่งต้นไม้จริงได้ทันที</p>
           </div>
 
           <div class="grid grid-cols-2 gap-2">
@@ -371,17 +366,31 @@
   <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzhCAGOj4t0-2-Ewn35zVEUsXFMmF4tDgLAunZfMqb2S2TiEYiQXg99kJUH-dcF3IZw/exec";
     const CACHE_STORAGE_KEY = "songnangyai_plants_v9";
-    const SCHOOL_COORDS = [16.17052, 103.32186];
+    const SCHOOL_COORDS = { lat: 16.17052, lng: 103.32186 };
 
     let plantDataList = [];
     let currentBase64Image = "";
     let mapInstance = null;
-    let mapMarkersLayer = null;
-    let selectedCategory = "ทั้งหมด"; // เก็บหมวดหมู่ที่เลือกอยู่
+    let markersList = [];
+    let currentOpenInfoWindow = null;
+    let selectedCategory = "ทั้งหมด";
 
-    // Mini Map Picker
+    // Mini Map Picker (Google Maps)
     let pickerMapInstance = null;
     let pickerMarker = null;
+
+    // ไอคอนหมุดต้นไม้สีแดงแบบ SVG
+    const treeMarkerIcon = {
+      url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg" width="34" height="42" viewBox="0 0 34 42">
+          <path d="M17 0 C7.6 0 0 7.6 0 17 C0 26.5 17 42 17 42 C17 42 34 26.5 34 17 C34 7.6 26.4 0 17 0 Z" fill="#b91c1c" stroke="#ffffff" stroke-width="2"/>
+          <path d="M17 8 L11 16 L14 16 L9 23 L15 23 L15 27 L19 27 L19 23 L25 23 L20 16 L23 16 Z" fill="#ffffff"/>
+        </svg>
+      `),
+      scaledSize: new google.maps.Size(34, 42),
+      anchor: new google.maps.Point(17, 42),
+      popupAnchor: new google.maps.Point(0, -38)
+    };
 
     window.addEventListener('DOMContentLoaded', () => {
       initRealMap();
@@ -403,72 +412,51 @@
       fetchPlants();
     }
 
-    function createCustomTreePin() {
-      return L.divIcon({
-        className: 'custom-map-pin',
-        html: `
-          <div style="position: relative; width: 34px; height: 42px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
-            <div style="position: absolute; width: 32px; height: 32px; background: #b91c1c; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); top: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.35); border: 2px solid #ffffff;"></div>
-            <i class="fa-solid fa-tree" style="position: relative; z-index: 2; color: #ffffff; font-size: 14px; top: -5px;"></i>
-          </div>
-        `,
-        iconSize: [34, 42],
-        iconAnchor: [17, 42],
-        popupAnchor: [0, -38]
-      });
-    }
-
     function initRealMap() {
       if (mapInstance) return;
 
-      mapInstance = L.map('realSchoolMap', {
+      mapInstance = new google.maps.Map(document.getElementById('realSchoolMap'), {
         center: SCHOOL_COORDS,
         zoom: 18,
-        maxZoom: 19
+        mapTypeId: 'hybrid',
+        tilt: 0,
+        mapTypeControl: false,
+        streetViewControl: false,
+        fullscreenControl: true
       });
-
-      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-        attribution: '&copy; Esri World Imagery &mdash; ร.ร.เทศบาลบ้านส่องนางใย',
-        maxZoom: 19
-      }).addTo(mapInstance);
-
-      mapMarkersLayer = L.layerGroup().addTo(mapInstance);
-      setTimeout(() => mapInstance.invalidateSize(), 400);
     }
 
     function initPickerMap() {
       if (pickerMapInstance) {
-        setTimeout(() => pickerMapInstance.invalidateSize(), 200);
+        google.maps.event.trigger(pickerMapInstance, 'resize');
+        pickerMapInstance.setCenter(SCHOOL_COORDS);
         return;
       }
 
-      pickerMapInstance = L.map('pickerMap', {
+      pickerMapInstance = new google.maps.Map(document.getElementById('pickerMap'), {
         center: SCHOOL_COORDS,
         zoom: 18,
-        maxZoom: 19
+        mapTypeId: 'hybrid',
+        tilt: 0,
+        mapTypeControl: false,
+        streetViewControl: false
       });
 
-      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-        attribution: '&copy; Esri',
-        maxZoom: 19
-      }).addTo(pickerMapInstance);
-
-      pickerMarker = L.marker(SCHOOL_COORDS, {
+      pickerMarker = new google.maps.Marker({
+        position: SCHOOL_COORDS,
+        map: pickerMapInstance,
         draggable: true,
-        icon: createCustomTreePin()
-      }).addTo(pickerMapInstance);
-
-      pickerMarker.on('dragend', function (e) {
-        const pos = e.target.getLatLng();
-        setFormCoords(pos.lat, pos.lng);
+        icon: treeMarkerIcon
       });
 
-      pickerMapInstance.on('click', function (e) {
-        pickerMarker.setLatLng(e.latlng);
-        setFormCoords(e.latlng.lat, e.latlng.lng);
+      pickerMarker.addListener('dragend', function (e) {
+        setFormCoords(e.latLng.lat(), e.latLng.lng());
       });
 
-      setTimeout(() => pickerMapInstance.invalidateSize(), 300);
+      pickerMapInstance.addListener('click', function (e) {
+        pickerMarker.setPosition(e.latLng);
+        setFormCoords(e.latLng.lat(), e.latLng.lng());
+      });
     }
 
     function setFormCoords(lat, lng) {
@@ -480,13 +468,17 @@
       const lat = parseFloat(document.getElementById('formLat').value);
       const lng = parseFloat(document.getElementById('formLng').value);
       if (!isNaN(lat) && !isNaN(lng) && pickerMarker && pickerMapInstance) {
-        pickerMarker.setLatLng([lat, lng]);
-        pickerMapInstance.setView([lat, lng], 18);
+        const pos = { lat, lng };
+        pickerMarker.setPosition(pos);
+        pickerMapInstance.setCenter(pos);
       }
     }
 
     function resetMapView() {
-      if (mapInstance) mapInstance.setView(SCHOOL_COORDS, 18, { animate: true });
+      if (mapInstance) {
+        mapInstance.setCenter(SCHOOL_COORDS);
+        mapInstance.setZoom(18);
+      }
     }
 
     function getPlantCoordinate(plant, index) {
@@ -499,45 +491,68 @@
       if (isNaN(lat) || isNaN(lng) || lat < 5 || lat > 21 || lng < 97 || lng > 106) {
         const angle = (index * (2 * Math.PI / 7)) + 0.35;
         const radius = 0.00032;
-        lat = SCHOOL_COORDS[0] + Math.sin(angle) * radius;
-        lng = SCHOOL_COORDS[1] + Math.cos(angle) * radius;
+        lat = SCHOOL_COORDS.lat + Math.sin(angle) * radius;
+        lng = SCHOOL_COORDS.lng + Math.cos(angle) * radius;
       }
       return { lat, lng };
     }
 
     function updateMapMarkers(plants) {
-      if (!mapInstance || !mapMarkersLayer) return;
-      mapMarkersLayer.clearLayers();
+      if (!mapInstance) return;
 
-      const pinIcon = createCustomTreePin();
-      const bounds = [];
+      // ล้างหมุดเดิม
+      markersList.forEach(m => m.setMap(null));
+      markersList = [];
 
-      plants.forEach((plant, index) => {
-        const coord = getPlantCoordinate(plant, index);
+      const bounds = new google.maps.LatLngBounds();
+
+      plants.forEach((plant) => {
+        const originalIndex = plantDataList.indexOf(plant);
+        const coord = getPlantCoordinate(plant, originalIndex);
         const imgUrl = optimizeImageUrl(plant.imageUrl);
 
-        const popupContent = `
-          <div class="text-center" style="min-width: 140px; max-width: 180px;">
-            <div class="w-full h-24 overflow-hidden rounded-lg mb-1.5 border bg-gray-100">
-              <img src="${imgUrl}" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=600'" />
+        const contentString = `
+          <div style="font-family: 'Kanit', sans-serif; text-align: center; max-width: 170px; padding: 4px;">
+            <div style="width: 100%; height: 95px; border-radius: 8px; overflow: hidden; margin-bottom: 6px; background-color: #f3f4f6;">
+              <img src="${imgUrl}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=600'" />
             </div>
-            <h5 class="font-bold text-gray-900 text-xs">${plant.nameTh || 'ต้นไม้'}</h5>
-            <p class="text-[10px] text-red-700 italic">${plant.nameEn || ''}</p>
-            <p class="text-[10px] text-gray-500 mt-0.5">${plant.location || 'ในโรงเรียน'}</p>
-            <button onclick="openDetailModal(${index})" class="mt-2 text-[10px] bg-red-700 text-white px-3 py-0.5 rounded-full font-semibold hover:bg-red-800">
+            <h5 style="font-weight: bold; color: #111827; font-size: 13px; margin: 0;">${plant.nameTh || 'ต้นไม้'}</h5>
+            <p style="font-size: 10px; color: #b91c1c; font-style: italic; margin: 2px 0;">${plant.nameEn || ''}</p>
+            <p style="font-size: 10px; color: #6b7280; margin-bottom: 6px;">${plant.location || 'ในโรงเรียน'}</p>
+            <button onclick="openDetailModal(${originalIndex})" style="background-color: #b91c1c; color: white; border: none; border-radius: 9999px; padding: 3px 12px; font-size: 10px; font-weight: 600; cursor: pointer;">
               ดูข้อมูล
             </button>
           </div>
         `;
 
-        const marker = L.marker([coord.lat, coord.lng], { icon: pinIcon }).bindPopup(popupContent);
-        mapMarkersLayer.addLayer(marker);
+        const infoWindow = new google.maps.InfoWindow({
+          content: contentString
+        });
+
+        const marker = new google.maps.Marker({
+          position: { lat: coord.lat, lng: coord.lng },
+          map: mapInstance,
+          icon: treeMarkerIcon,
+          title: plant.nameTh || 'ต้นไม้'
+        });
+
+        marker.addListener('click', () => {
+          if (currentOpenInfoWindow) currentOpenInfoWindow.close();
+          infoWindow.open(mapInstance, marker);
+          currentOpenInfoWindow = infoWindow;
+        });
+
         plant._marker = marker;
-        bounds.push([coord.lat, coord.lng]);
+        plant._infoWindow = infoWindow;
+        markersList.push(marker);
+        bounds.extend(marker.getPosition());
       });
 
-      if (bounds.length > 0) {
-        mapInstance.fitBounds(bounds, { maxZoom: 18, padding: [35, 35] });
+      if (plants.length > 1) {
+        mapInstance.fitBounds(bounds);
+      } else if (plants.length === 1) {
+        mapInstance.setCenter(bounds.getCenter());
+        mapInstance.setZoom(19);
       }
     }
 
@@ -550,8 +565,11 @@
 
       if (plant._marker) {
         setTimeout(() => {
-          mapInstance.setView(plant._marker.getLatLng(), 19, { animate: true });
-          plant._marker.openPopup();
+          mapInstance.setCenter(plant._marker.getPosition());
+          mapInstance.setZoom(19);
+          if (currentOpenInfoWindow) currentOpenInfoWindow.close();
+          plant._infoWindow.open(mapInstance, plant._marker);
+          currentOpenInfoWindow = plant._infoWindow;
         }, 400);
       }
     }
@@ -648,22 +666,15 @@
       }).join('');
     }
 
-    // ฟังก์ชันสลับปุ่มหมวดหมู่
     function setCategoryFilter(category, btnElement) {
       selectedCategory = category;
-
-      // อัปเดตสไตล์ปุ่มทั้งหมด
       document.querySelectorAll('.category-btn').forEach(btn => {
         btn.className = 'category-btn px-4 py-2 rounded-full text-xs font-medium transition whitespace-nowrap bg-white text-gray-600 hover:bg-red-50 hover:text-red-700 border border-gray-200 shadow-sm flex items-center gap-1.5';
       });
-
-      // ตั้งค่าปุ่มที่ถูกคลิกให้เป็น Active
       btnElement.className = 'category-btn active px-4 py-2 rounded-full text-xs font-semibold transition whitespace-nowrap bg-red-700 text-white border border-red-700 shadow-sm flex items-center gap-1.5';
-
       filterPlants();
     }
 
-    // ฟังก์ชันกรองพรรณไม้ (ทำงานร่วมกันระหว่างค้นหาข้อความ + หมวดหมู่)
     function filterPlants() {
       const q = document.getElementById('searchInput').value.toLowerCase().trim();
       const filtered = plantDataList.filter(p => {
@@ -682,10 +693,10 @@
     }
 
     function fillDefaultCoords() {
-      setFormCoords(SCHOOL_COORDS[0], SCHOOL_COORDS[1]);
+      setFormCoords(SCHOOL_COORDS.lat, SCHOOL_COORDS.lng);
       if (pickerMarker && pickerMapInstance) {
-        pickerMarker.setLatLng(SCHOOL_COORDS);
-        pickerMapInstance.setView(SCHOOL_COORDS, 18);
+        pickerMarker.setPosition(SCHOOL_COORDS);
+        pickerMapInstance.setCenter(SCHOOL_COORDS);
       }
     }
 
@@ -700,8 +711,9 @@
           const lng = pos.coords.longitude;
           setFormCoords(lat, lng);
           if (pickerMarker && pickerMapInstance) {
-            pickerMarker.setLatLng([lat, lng]);
-            pickerMapInstance.setView([lat, lng], 19);
+            const currentPos = { lat, lng };
+            pickerMarker.setPosition(currentPos);
+            pickerMapInstance.setCenter(currentPos);
           }
           btnText.innerText = 'แตะเพื่อดึงพิกัดจาก GPS มือถือ (ความแม่นยำสูง)';
           showToast(`ดึงพิกัดสำเร็จ (ความแม่นยำ ±${Math.round(pos.coords.accuracy)} เมตร)`);
@@ -755,8 +767,8 @@
         category: document.getElementById('formCategory').value,
         benefits: document.getElementById('formBenefits').value,
         location: document.getElementById('formLocation').value,
-        lat: document.getElementById('formLat').value || SCHOOL_COORDS[0],
-        lng: document.getElementById('formLng').value || SCHOOL_COORDS[1],
+        lat: document.getElementById('formLat').value || SCHOOL_COORDS.lat,
+        lng: document.getElementById('formLng').value || SCHOOL_COORDS.lng,
         imageBase64: currentBase64Image
       };
 
@@ -804,7 +816,13 @@
     function openAdminModal() { 
       document.getElementById('adminModal').classList.remove('hidden'); 
       fillDefaultCoords();
-      initPickerMap();
+      setTimeout(() => {
+        initPickerMap();
+        if (pickerMapInstance) {
+          google.maps.event.trigger(pickerMapInstance, 'resize');
+          pickerMapInstance.setCenter(SCHOOL_COORDS);
+        }
+      }, 150);
     }
     
     function closeAdminModal() { document.getElementById('adminModal').classList.add('hidden'); }
