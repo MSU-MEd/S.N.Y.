@@ -97,6 +97,23 @@
     }
     @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } *,*::before,*::after { animation:none!important; transition:none!important; } }
 
+
+    /* Mobile: replace the school header with the floating menu after scrolling. */
+    @media (max-width:767px) {
+      body>header { transition:transform .28s var(--ease),opacity .2s; }
+      body.mobile-nav-top>header { transform:translateY(-110%); opacity:0; pointer-events:none; visibility:hidden; }
+      body.mobile-nav-top .floating-nav {
+        top:calc(26px + env(safe-area-inset-top)); bottom:auto;
+        height:70px; border-radius:25px;
+        animation:dock-arrive .28s var(--ease);
+      }
+      html { scroll-padding-top:calc(120px + env(safe-area-inset-top)); }
+      @keyframes dock-arrive {
+        from { opacity:0; transform:translate(-50%,-10px); }
+        to { opacity:1; transform:translate(-50%,0); }
+      }
+    }
+
   </style>
 </head>
 <body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
@@ -1055,6 +1072,34 @@
       document.querySelectorAll('button').forEach(button => {
         if (!button.textContent.trim() && !button.getAttribute('aria-label')) button.setAttribute('aria-label', button.getAttribute('onclick')?.includes('openAdmin')?'เพิ่มพรรณไม้':'ปิด');
       });
+    })();
+  </script>
+
+
+  <script>
+    (() => {
+      const mobile = matchMedia('(max-width: 767px)');
+      const header = document.querySelector('body > header');
+      let compact = false;
+      let pending = false;
+      function updateMobileNavigation() {
+        pending = false;
+        // Separate enter/leave thresholds avoid flickering near the boundary.
+        const next = mobile.matches && (compact ? scrollY > 48 : scrollY > 110);
+        if (next !== compact) {
+          compact = next;
+          document.body.classList.toggle('mobile-nav-top', compact);
+          header.inert = compact;
+          if (compact) header.setAttribute('aria-hidden', 'true');
+          else header.removeAttribute('aria-hidden');
+        }
+      }
+      addEventListener('scroll', () => {
+        if (!pending) { pending = true; requestAnimationFrame(updateMobileNavigation); }
+      }, {passive:true});
+      addEventListener('resize', updateMobileNavigation);
+      addEventListener('pageshow', updateMobileNavigation);
+      updateMobileNavigation();
     })();
   </script>
 
