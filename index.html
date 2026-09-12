@@ -7,12 +7,10 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-
   <!-- Google Maps JavaScript API -->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAJv55q0XBjPMyS_GV9cabQbij18_zFowA&libraries=places"></script>
   <!-- Html5-qrcode สำหรับสแกนกล้อง -->
   <script src="https://unpkg.com/html5-qrcode@2.3.8/minified/html5-qrcode.min.js"></script>
-
   <style>
     body { font-family: 'Kanit', sans-serif; }
     
@@ -34,9 +32,8 @@
   </style>
 </head>
 <body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
-
   <div id="toast" class="hidden fixed top-5 right-5 z-50 bg-gray-900 text-white px-5 py-3 rounded-xl shadow-lg transition"></div>
-
+  
   <!-- Navbar -->
   <header class="bg-white border-b sticky top-0 z-40">
     <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
@@ -117,10 +114,9 @@
     </div>
   </section>
 
-  <!-- Counter Stats (จัดเรียง 3 คอลัมน์แถวเดียวกันทั้งบนมือถือและคอมพิวเตอร์) -->
+  <!-- Counter Stats -->
   <section class="max-w-5xl mx-auto px-4 -mt-8 relative z-20">
     <div class="bg-white rounded-3xl md:rounded-full shadow-lg border border-gray-100 py-4 px-3 sm:px-6 md:px-12 grid grid-cols-3 gap-2 sm:gap-5 items-center">
-      
       <div class="flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-3.5 text-center sm:text-left">
         <div class="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-red-700 text-white flex items-center justify-center text-xs sm:text-lg shrink-0 shadow-sm">
           <i class="fa-solid fa-leaf"></i>
@@ -159,7 +155,6 @@
           </div>
         </div>
       </div>
-
     </div>
   </section>
 
@@ -364,72 +359,53 @@
     </div>
   </div>
 
-  <!-- QR Checker Modal : ตรวจสอบ QR ชั่วคราว -->
+  <!-- QR Scanner Modal (อัปเดตช่องอัปโหลดรูปภาพเพื่อตรวจเช็ก QR) -->
   <div id="qrScannerModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-    <div class="bg-white max-w-md w-full rounded-3xl overflow-hidden shadow-2xl p-5 sm:p-6">
-
-      <div class="flex justify-between items-center pb-3 border-b mb-5">
+    <div class="bg-white max-w-md w-full rounded-3xl overflow-hidden shadow-2xl p-5 sm:p-6 flex flex-col max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center pb-3 border-b mb-4">
         <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
-          <i class="fa-solid fa-qrcode text-red-700"></i>
-          ตรวจสอบ QR พรรณไม้
+          <i class="fa-solid fa-qrcode text-red-700"></i> ตรวจสอบ QR โค้ด (อัปโหลดรูปหรือสแกน)
         </h3>
-        <button onclick="closeQrScanner()"
-                class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 transition">
+        <button onclick="closeQrScanner()" class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 transition">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
-      <div class="bg-red-50 border border-red-100 rounded-2xl p-4 mb-4 text-center">
-        <div class="w-14 h-14 mx-auto mb-2 rounded-full bg-red-100 flex items-center justify-center text-red-700 text-2xl">
-          <i class="fa-solid fa-qrcode"></i>
-        </div>
-        <h4 class="font-bold text-gray-900 text-sm">ตรวจสอบว่า QR ถูกต้นไม้หรือไม่</h4>
-        <p class="text-xs text-gray-500 mt-1">ถ่ายรูป QR หรือเลือกรูป QR จากเครื่อง</p>
-      </div>
-
-      <label for="qrImageInput"
-             class="w-full py-3.5 px-4 bg-red-700 hover:bg-red-800 text-white rounded-2xl font-semibold text-sm transition flex items-center justify-center gap-2 cursor-pointer shadow-sm">
-        <i class="fa-solid fa-camera"></i>
-        ถ่ายรูป / เลือกรูป QR
-      </label>
-
-      <input type="file"
-             id="qrImageInput"
-             accept="image/*"
-             capture="environment"
-             class="hidden"
-             onchange="scanQrFromImage(event)" />
-
-      <div id="qrCheckLoading" class="hidden mt-4 text-center text-sm text-gray-500">
-        <i class="fa-solid fa-spinner fa-spin text-red-700 mr-1"></i>
-        กำลังตรวจสอบ QR...
-      </div>
-
-      <div id="qrCheckResult" class="hidden mt-4 rounded-2xl border p-5 text-center">
-        <div id="qrCheckIcon" class="w-16 h-16 mx-auto rounded-full flex items-center justify-center text-3xl mb-3"></div>
-        <p id="qrCheckTitle" class="text-sm font-medium text-gray-500"></p>
-        <p id="qrCheckPlantName" class="text-2xl font-black mt-1"></p>
-        <p id="qrCheckSub" class="text-xs text-gray-500 mt-2"></p>
-      </div>
-
-      <div class="flex gap-2 mt-5">
-        <label for="qrImageInput"
-               class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full font-semibold text-xs text-center cursor-pointer">
-          <i class="fa-solid fa-rotate mr-1"></i>
-          ตรวจสอบอีกครั้ง
+      <!-- ช่องทางเลือกที่ 1: อัปโหลดรูปภาพป้าย QR เพื่อเช็กความถูกต้อง -->
+      <div class="bg-red-50 border border-red-200 p-4 rounded-2xl mb-4 space-y-2">
+        <label class="block text-xs font-bold text-red-900 flex items-center gap-1.5">
+          <i class="fa-solid fa-upload text-red-700"></i> วิธีที่ 1: อัปโหลดรูปภาพป้าย / QR โค้ดเพื่อตรวจทันที
         </label>
-        <button type="button"
-                onclick="closeQrScanner()"
-                class="flex-1 py-2.5 bg-red-700 hover:bg-red-800 text-white rounded-full font-semibold text-xs">
-          ปิด
+        <p class="text-[11px] text-gray-600">เลือกไฟล์ภาพป้ายต้นไม้ที่คุณออกแบบ (เช่น ป้ายต้นทองกราว) เพื่อเช็กว่า QR โค้ดตรงกับต้นไม้ชนิดใด</p>
+        <input type="file" accept="image/*" onchange="scanQrFromFile(event)" class="w-full text-xs text-gray-500 file:mr-2 file:py-2 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-red-700 file:text-white hover:file:bg-red-800 cursor-pointer" />
+      </div>
+
+      <div class="text-center text-xs text-gray-400 my-1">- หรือใช้กล้องสแกน -</div>
+
+      <!-- ช่องทางเลือกที่ 2: พื้นที่กล้องสแกน -->
+      <div class="relative w-full bg-black rounded-2xl overflow-hidden aspect-square mb-4 flex items-center justify-center">
+        <div id="reader" class="w-full h-full"></div>
+      </div>
+
+      <!-- ผลลัพธ์การตรวจสอบ -->
+      <div id="scanResultBox" class="hidden bg-gray-50 border border-gray-200 rounded-2xl p-3.5 text-xs space-y-2 mb-4">
+        <div class="font-semibold text-gray-700 flex items-center gap-1.5">
+          <i class="fa-solid fa-circle-check text-green-600"></i> ผลการแกะข้อมูลจาก QR โค้ด:
+        </div>
+        <p id="scanResultText" class="text-gray-600 break-all bg-white p-2 rounded-lg border"></p>
+        <div id="scanMatchStatus" class="font-bold text-sm"></div>
+      </div>
+
+      <div class="flex gap-2">
+        <button type="button" onclick="restartScanner()" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full font-semibold text-xs transition">
+          รีเซ็ตกล้อง
+        </button>
+        <button type="button" onclick="closeQrScanner()" class="flex-1 py-2.5 bg-red-700 hover:bg-red-800 text-white rounded-full font-semibold text-xs transition">
+          ปิดหน้าต่าง
         </button>
       </div>
-
     </div>
   </div>
-
-  <!-- ตัวอ่าน QR แบบชั่วคราวจากรูปภาพ ไม่แสดงให้ผู้ใช้เห็น -->
-  <div id="qr-temp-reader" style="display:none;width:1px;height:1px;overflow:hidden;"></div>
 
   <!-- Admin Modal -->
   <div id="adminModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
@@ -544,7 +520,7 @@
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwXMlqv571Jlx4lBhYbBrW7iDmWRtjROmCq_nrYP1RQHBN3OWRzl7yvGX0O4mzc08rD/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyfmFPSsV6_x6z1c85HThFJN5Gh97OTemmWM7WRmCRKzMxnAlnXDmV4mJLIA1YsjtI/exec";
     const CACHE_STORAGE_KEY = "songnangyai_plants_v10";
     const SCHOOL_COORDS = { lat: 16.17052, lng: 103.32186 };
 
@@ -1329,149 +1305,114 @@
     
     function closeAdminModal() { document.getElementById('adminModal').classList.add('hidden'); }
 
-    // =====================================================
-    // QR CHECKER - ตรวจสอบ QR ชั่วคราวจากรูปภาพ
-    // ไม่เปิด Live Camera และไม่พาไปหน้ารายละเอียดต้นไม้
-    // =====================================================
-
+    // ฟังก์ชันเปิด Modal สแกน/ตรวจสอบ QR
     function openQrScanner() {
-      document.getElementById('qrScannerModal').classList.remove('hidden');
-      resetQrChecker();
+      const modal = document.getElementById('qrScannerModal');
+      modal.classList.remove('hidden');
+      document.getElementById('scanResultBox').classList.add('hidden');
+      
+      setTimeout(() => {
+        try {
+          if (!html5QrCode) {
+            html5QrCode = new Html5Qrcode("reader");
+          }
+          if (html5QrCode.isScanning) return;
+
+          const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+          html5QrCode.start(
+            { facingMode: "environment" }, 
+            config,
+            (decodedText) => {
+              handleScannedData(decodedText);
+              html5QrCode.stop().catch(err => {});
+            },
+            () => {}
+          ).catch(err => {
+            console.log("Camera inactive or blocked, use file upload instead.");
+          });
+        } catch (e) {}
+      }, 400);
     }
 
-    function closeQrScanner() {
-      document.getElementById('qrScannerModal').classList.add('hidden');
-      resetQrChecker();
-    }
-
-    function resetQrChecker() {
-      const result = document.getElementById('qrCheckResult');
-      const loading = document.getElementById('qrCheckLoading');
-      const input = document.getElementById('qrImageInput');
-
-      if (result) result.classList.add('hidden');
-      if (loading) loading.classList.add('hidden');
-      if (input) input.value = '';
-
-      const name = document.getElementById('qrCheckPlantName');
-      const title = document.getElementById('qrCheckTitle');
-      const sub = document.getElementById('qrCheckSub');
-      const icon = document.getElementById('qrCheckIcon');
-
-      if (name) name.innerText = '';
-      if (title) title.innerText = '';
-      if (sub) sub.innerText = '';
-      if (icon) {
-        icon.className = 'w-16 h-16 mx-auto rounded-full flex items-center justify-center text-3xl mb-3';
-        icon.innerHTML = '';
-      }
-    }
-
-    async function scanQrFromImage(event) {
-      const file = event.target.files && event.target.files[0];
+    // ฟังก์ชันอ่าน QR โค้ดจากไฟล์รูปภาพป้ายต้นไม้ที่คุณอัปโหลด
+    async function scanQrFromFile(event) {
+      const file = event.target.files[0];
       if (!file) return;
 
-      const loading = document.getElementById('qrCheckLoading');
-      const result = document.getElementById('qrCheckResult');
-
-      loading.classList.remove('hidden');
-      result.classList.add('hidden');
-
       try {
-        if (typeof Html5Qrcode === 'undefined') {
-          throw new Error('ไม่พบไลบรารี QR Scanner');
+        if (!html5QrCode) {
+          html5QrCode = new Html5Qrcode("reader");
         }
-
-        const scanner = new Html5Qrcode('qr-temp-reader');
-        let decodedText = '';
-
-        try {
-          decodedText = await scanner.scanFile(file, true);
-        } finally {
-          try { scanner.clear(); } catch (e) {}
-        }
-
-        console.log('QR decoded:', decodedText);
-        showQrPlantResult(decodedText);
-
-      } catch (error) {
-        console.error('QR Scan Error:', error);
-        showQrError(
-          'อ่าน QR ไม่สำเร็จ',
-          'กรุณาถ่ายรูป QR ให้เห็นทั้งโค้ดชัดเจน แล้วลองอีกครั้ง'
-        );
-      } finally {
-        loading.classList.add('hidden');
+        const decodedText = await html5QrCode.scanFile(file, true);
+        handleScannedData(decodedText);
+        showToast('อ่าน QR โค้ดจากรูปภาพสำเร็จ!');
+      } catch (err) {
+        alert("ไม่พบ QR โค้ดในภาพนี้ หรือภาพไม่ชัดเจน กรุณาลองใหม่อีกครั้ง");
+        console.error(err);
       }
     }
 
-    function showQrPlantResult(text) {
-      const result = document.getElementById('qrCheckResult');
-      const icon = document.getElementById('qrCheckIcon');
-      const title = document.getElementById('qrCheckTitle');
-      const plantName = document.getElementById('qrCheckPlantName');
-      const sub = document.getElementById('qrCheckSub');
+    function restartScanner() {
+      document.getElementById('scanResultBox').classList.add('hidden');
+      if (html5QrCode) {
+        html5QrCode.stop().then(() => {
+          startScannerCamera();
+        }).catch(() => {
+          startScannerCamera();
+        });
+      } else {
+        openQrScanner();
+      }
+    }
 
-      let targetId = '';
-      let targetName = '';
+    function startScannerCamera() {
+      if (html5QrCode && !html5QrCode.isScanning) {
+        html5QrCode.start(
+          { facingMode: "environment" }, 
+          { fps: 10, qrbox: { width: 250, height: 250 } },
+          (decodedText) => {
+            handleScannedData(decodedText);
+            html5QrCode.stop().catch(err => {});
+          },
+          () => {}
+        ).catch(err => {});
+      }
+    }
 
+    function handleScannedData(text) {
+      const resultBox = document.getElementById('scanResultBox');
+      const resultText = document.getElementById('scanResultText');
+      const matchStatus = document.getElementById('scanMatchStatus');
+      
+      resultBox.classList.remove('hidden');
+      resultText.innerText = text;
+
+      let targetId = "";
       try {
         const url = new URL(text);
-        targetId = url.searchParams.get('id') || url.searchParams.get('plantId') || '';
-        targetName = url.searchParams.get('name') || '';
+        targetId = url.searchParams.get("id") || url.searchParams.get("name");
       } catch (e) {
-        targetId = text.trim();
-        targetName = text.trim();
+        targetId = text;
       }
 
       const foundPlant = plantDataList.find(p => {
         const pId = (p.id || p.Id || '').toString().trim();
         const pName = (p.nameTh || p.NameTh || '').toString().trim();
-
-        return (
-          (targetId && pId === targetId) ||
-          (targetName && pName === targetName) ||
-          (text && pId && text.includes(pId))
-        );
+        return pId === targetId || pName === targetId || text.includes(pId) || text.includes(pName);
       });
 
-      result.classList.remove('hidden');
-
       if (foundPlant) {
-        icon.className = 'w-16 h-16 mx-auto rounded-full bg-green-100 text-green-600 flex items-center justify-center text-3xl mb-3';
-        icon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
-
-        title.innerText = 'QR นี้เป็นของต้นไม้';
-        plantName.innerText = foundPlant.nameTh || 'ไม่ระบุชื่อ';
-        plantName.className = 'text-2xl font-black text-green-700 mt-1';
-        sub.innerText = '✓ ตรงกับข้อมูลในระบบแล้ว';
+        matchStatus.innerHTML = `<span class="text-green-600"><i class="fa-solid fa-check-circle"></i> ตรงกับข้อมูลในระบบ: <b>${foundPlant.nameTh}</b> (หมวด: ${foundPlant.category})</span>`;
       } else {
-        icon.className = 'w-16 h-16 mx-auto rounded-full bg-red-100 text-red-600 flex items-center justify-center text-3xl mb-3';
-        icon.innerHTML = '<i class="fa-solid fa-circle-xmark"></i>';
-
-        title.innerText = 'ไม่พบต้นไม้ในระบบ';
-        plantName.innerText = 'QR ไม่ตรงกับข้อมูล';
-        plantName.className = 'text-2xl font-black text-red-700 mt-1';
-        sub.innerText = 'กรุณาตรวจสอบว่า QR นี้สร้างจากต้นไม้ในระบบหรือไม่';
+        matchStatus.innerHTML = `<span class="text-amber-600"><i class="fa-solid fa-triangle-exclamation"></i> ไม่พบข้อมูลที่ตรงกันในระบบ (หรือรูปแบบ QR อาจไม่ใช่ลิงก์พรรณไม้ของโรงเรียน)</span>`;
       }
     }
 
-    function showQrError(titleText, subText) {
-      const result = document.getElementById('qrCheckResult');
-      const icon = document.getElementById('qrCheckIcon');
-      const title = document.getElementById('qrCheckTitle');
-      const plantName = document.getElementById('qrCheckPlantName');
-      const sub = document.getElementById('qrCheckSub');
-
-      result.classList.remove('hidden');
-
-      icon.className = 'w-16 h-16 mx-auto rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-3xl mb-3';
-      icon.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
-
-      title.innerText = titleText;
-      plantName.innerText = 'ไม่สามารถอ่าน QR ได้';
-      plantName.className = 'text-2xl font-black text-amber-600 mt-1';
-      sub.innerText = subText;
+    function closeQrScanner() {
+      if (html5QrCode && html5QrCode.isScanning) {
+        html5QrCode.stop().catch(err => {});
+      }
+      document.getElementById('qrScannerModal').classList.add('hidden');
     }
 
     function showToast(msg) {
@@ -1481,6 +1422,5 @@
       setTimeout(() => toast.classList.add('hidden'), 3500);
     }
   </script>
-
 </body>
 </html>
