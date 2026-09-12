@@ -8,13 +8,12 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
-  <!-- Google Maps JavaScript API (อย่าลืมตรวจสอบสถานะ Billing และ Enable API บน Google Cloud) -->
+  <!-- Google Maps JavaScript API -->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAJv55q0XBjPMyS_GV9cabQbij18_zFowA&libraries=places"></script>
 
   <style>
     body { font-family: 'Kanit', sans-serif; }
     
-    /* ป้องกันกล่องป้ายข้อมูลต้นไม้บนแผนที่บีบลีบ */
     .gm-style .gm-style-iw-c {
       border-radius: 1rem !important;
       padding: 12px !important;
@@ -110,47 +109,49 @@
     </div>
   </section>
 
-  <!-- Counter Stats -->
+  <!-- Counter Stats (ปรับแก้ให้เรียงเป็น 3 คอลัมน์แถวเดียวกันบนมือถือและทุกหน้าจอ) -->
   <section class="max-w-5xl mx-auto px-4 -mt-8 relative z-20">
-    <div class="bg-white rounded-3xl md:rounded-full shadow-lg border border-gray-100 py-4 px-6 md:px-12 grid grid-cols-1 md:grid-cols-3 gap-5 items-center">
-      <div class="flex items-center justify-center gap-3.5">
-        <div class="w-12 h-12 rounded-full bg-red-700 text-white flex items-center justify-center text-lg shrink-0 shadow-sm">
+    <div class="bg-white rounded-3xl md:rounded-full shadow-lg border border-gray-100 py-4 px-3 sm:px-6 md:px-12 grid grid-cols-3 gap-2 sm:gap-5 items-center">
+      
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-3.5 text-center sm:text-left">
+        <div class="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-red-700 text-white flex items-center justify-center text-xs sm:text-lg shrink-0 shadow-sm">
           <i class="fa-solid fa-leaf"></i>
         </div>
         <div>
-          <span class="block text-xs text-gray-500 font-medium">จำนวนชนิดพรรณไม้</span>
-          <div class="flex items-baseline gap-1 mt-0.5">
-            <span id="totalCount" class="text-2xl font-black text-gray-900 leading-none">0</span>
-            <span class="text-xs font-semibold text-gray-600">ชนิด</span>
+          <span class="block text-[10px] sm:text-xs text-gray-500 font-medium">จำนวนชนิดพรรณไม้</span>
+          <div class="flex items-baseline justify-center sm:justify-start gap-1 mt-0.5">
+            <span id="totalCount" class="text-base sm:text-2xl font-black text-gray-900 leading-none">0</span>
+            <span class="text-[10px] sm:text-xs font-semibold text-gray-600">ชนิด</span>
           </div>
         </div>
       </div>
 
-      <div class="flex items-center justify-center gap-3.5">
-        <div class="w-12 h-12 rounded-full bg-red-700 text-white flex items-center justify-center text-lg shrink-0 shadow-sm">
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-3.5 text-center sm:text-left">
+        <div class="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-red-700 text-white flex items-center justify-center text-xs sm:text-lg shrink-0 shadow-sm">
           <i class="fa-solid fa-map-pin"></i>
         </div>
         <div>
-          <span class="block text-xs text-gray-500 font-medium">จุดพิกัดหมุดดาวเทียม</span>
-          <div class="flex items-baseline gap-1 mt-0.5">
-            <span id="spotsCount" class="text-2xl font-black text-gray-900 leading-none">0</span>
-            <span class="text-xs font-semibold text-gray-600">จุด</span>
+          <span class="block text-[10px] sm:text-xs text-gray-500 font-medium">จุดพิกัดหมุดดาวเทียม</span>
+          <div class="flex items-baseline justify-center sm:justify-start gap-1 mt-0.5">
+            <span id="spotsCount" class="text-base sm:text-2xl font-black text-gray-900 leading-none">0</span>
+            <span class="text-[10px] sm:text-xs font-semibold text-gray-600">จุด</span>
           </div>
         </div>
       </div>
 
-      <div class="flex items-center justify-center gap-3.5">
-        <div class="w-12 h-12 rounded-full bg-red-700 text-white flex items-center justify-center text-lg shrink-0 shadow-sm">
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-3.5 text-center sm:text-left">
+        <div class="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-red-700 text-white flex items-center justify-center text-xs sm:text-lg shrink-0 shadow-sm">
           <i class="fa-solid fa-shapes"></i>
         </div>
         <div>
-          <span class="block text-xs text-gray-500 font-medium">หมวดหมู่พรรณไม้</span>
-          <div class="flex items-baseline gap-1 mt-0.5">
-            <span id="categoriesCount" class="text-2xl font-black text-gray-900 leading-none">0</span>
-            <span class="text-xs font-semibold text-gray-600">หมวดหมู่</span>
+          <span class="block text-[10px] sm:text-xs text-gray-500 font-medium">หมวดหมู่พรรณไม้</span>
+          <div class="flex items-baseline justify-center sm:justify-start gap-1 mt-0.5">
+            <span id="categoriesCount" class="text-base sm:text-2xl font-black text-gray-900 leading-none">0</span>
+            <span class="text-[10px] sm:text-xs font-semibold text-gray-600">หมวดหมู่</span>
           </div>
         </div>
       </div>
+
     </div>
   </section>
 
@@ -204,7 +205,7 @@
       </button>
     </div>
 
-    <!-- รายการต้นไม้ (1 ชนิดต่อ 1 การ์ด) -->
+    <!-- รายการต้นไม้ -->
     <div id="plantGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
 
     <!-- ปุ่มแสดงเพิ่มเติม -->
@@ -216,7 +217,7 @@
     </div>
   </section>
 
-  <!-- Big Satellite Map Section พร้อมฟังก์ชันจุดสีฟ้าและปุ่มติดตามตำแหน่ง -->
+  <!-- Big Satellite Map Section -->
   <section id="map-section" class="max-w-7xl mx-auto px-4 py-6 w-full">
     <div class="bg-white p-5 sm:p-8 rounded-3xl shadow-sm border border-gray-200">
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4">
@@ -229,7 +230,6 @@
           </p>
         </div>
         <div class="flex flex-wrap items-center gap-2 shrink-0">
-          <!-- ปุ่มบินไปยังตำแหน่งปัจจุบันของผู้ใช้ -->
           <button onclick="panToUserLocation()" class="bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 px-3.5 py-1.5 rounded-full text-xs font-semibold transition flex items-center gap-1.5 shadow-sm">
             <i class="fa-solid fa-location-crosshairs text-blue-600 animate-pulse"></i> ตำแหน่งของฉัน
           </button>
@@ -311,7 +311,6 @@
       </div>
 
       <div class="p-5 sm:p-6 overflow-y-auto">
-        <!-- กล่องแสดงรายการจุดที่พบทั้งหมดเมื่อมีมากกว่า 1 ต้น -->
         <div id="modalDuplicateAlert" class="hidden mb-4 bg-amber-50 border border-amber-200 text-amber-900 text-xs p-3.5 rounded-2xl space-y-2.5">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-1.5 font-semibold text-amber-800">
@@ -470,7 +469,7 @@
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzQqv5XO5PckdTRWFM3-72kEQABu9TrgIsBdhGBiEs0E2aV3Q22mfp5tpn3gxjNFaQw/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzaKG9SJKQNS6sHgO_SaapYC70QR-PyE4MngC8FpPpDQfFihqZjznbm_VcW2uqMfNSu/exec";
     const CACHE_STORAGE_KEY = "songnangyai_plants_v10";
     const SCHOOL_COORDS = { lat: 16.17052, lng: 103.32186 };
 
@@ -482,12 +481,10 @@
     let currentOpenInfoWindow = null;
     let selectedCategory = "ทั้งหมด";
 
-    // จัดการแบ่งหน้าแสดงผล
     const ITEMS_PER_PAGE = 8;
     let currentDisplayLimit = 8;
     let hasAutoOpenedModal = false;
 
-    // ระบบ GPS สด (Real-time Blue Dot)
     let userLocationMarker = null;
     let userAccuracyCircle = null;
     let currentUserPos = null;
@@ -496,7 +493,6 @@
     let pickerMapInstance = null;
     let pickerMarker = null;
 
-    // ไอคอนหมุดต้นไม้สีแดง
     const treeMarkerIcon = {
       url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
         <svg xmlns="http://www.w3.org/2000/svg" width="36" height="46" viewBox="0 0 34 42">
@@ -509,7 +505,6 @@
       popupAnchor: new google.maps.Point(0, -42)
     };
 
-    // ไอคอนจุดสีฟ้าสำหรับผู้ใช้งานแบบ Google Maps
     const userLocationIcon = {
       url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
         <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24">
@@ -556,11 +551,9 @@
         fullscreenControl: true
       });
 
-      // เริ่มติดตามตำแหน่งผู้ใช้แบบ Real-time ทันทีที่แผนที่พร้อม
       startLiveLocationTracking();
     }
 
-    // ฟังก์ชันติดตามตำแหน่ง Real-time จุดสีฟ้า
     function startLiveLocationTracking() {
       if (!navigator.geolocation) return;
 
@@ -580,7 +573,6 @@
           if (!mapInstance) return;
 
           if (!userLocationMarker) {
-            // สร้างจุดสีฟ้า
             userLocationMarker = new google.maps.Marker({
               position: currentUserPos,
               map: mapInstance,
@@ -589,7 +581,6 @@
               zIndex: 9999
             });
 
-            // สร้างวงรัศมีความแม่นยำ
             userAccuracyCircle = new google.maps.Circle({
               map: mapInstance,
               center: currentUserPos,
@@ -602,20 +593,16 @@
               zIndex: 9998
             });
           } else {
-            // อัปเดตพิกัดตามการเดิน
             userLocationMarker.setPosition(currentUserPos);
             userAccuracyCircle.setCenter(currentUserPos);
             userAccuracyCircle.setRadius(accuracy);
           }
         },
-        (err) => {
-          console.warn("ไม่สามารถดึงตำแหน่งสดได้:", err.message);
-        },
+        (err) => {},
         options
       );
     }
 
-    // ฟังก์ชันเลื่อนแผนที่ไปยังจุดที่ผู้ใช้ยืนอยู่
     function panToUserLocation() {
       if (currentUserPos && mapInstance) {
         mapInstance.setCenter(currentUserPos);
@@ -630,7 +617,7 @@
             mapInstance.setZoom(19);
           }
         }, () => {
-          alert('ไม่สามารถระบุตำแหน่งได้ กรุณาเปิด Location (GPS) ในโทรศัพท์ และกดอนุญาตการเข้าถึงพิกัดบนเบราว์เซอร์');
+          alert('ไม่สามารถระบุตำแหน่งได้ กรุณาเปิด Location (GPS) และอนุญาตการเข้าถึงพิกัด');
         }, { enableHighAccuracy: true });
       }
     }
@@ -867,7 +854,6 @@
       if (matchedMarkers.length > 0) {
         setTimeout(() => {
           if (currentOpenInfoWindow) currentOpenInfoWindow.close();
-
           mapInstance.fitBounds(bounds);
 
           const listener = google.maps.event.addListener(mapInstance, 'idle', () => {
@@ -888,7 +874,7 @@
 
     async function fetchPlants() {
       try {
-        const response = await fetch(SCRIPT_URL);
+        const response = await fetch(SCRIPT_URL + "?v=" + Date.now()); // ป้องกันเบราว์เซอร์แคชเก่า
         const result = await response.json();
 
         if (result.status === 'success' && Array.isArray(result.data)) {
@@ -930,7 +916,7 @@
       if (url.includes('drive.google.com') || url.includes('googleusercontent.com')) {
         const match = url.match(/[-\w]{25,}/);
         if (match) {
-          return `https://lh3.googleusercontent.com/d/${match[0]}`;
+          return `https://lh3.googleusercontent.com/d/${match[0]}?t=${Date.now()}`;
         }
       }
       return url;
@@ -1046,7 +1032,6 @@
       });
 
       filteredGroupsList = groupPlantsByName(rawFiltered);
-
       renderPlants();
       updateMapMarkers(rawFiltered);
     }
@@ -1079,13 +1064,9 @@
         },
         (err) => {
           btnText.innerText = 'แตะเพื่อดึงพิกัดจาก GPS มือถือ (ณ จุดที่ยืนจริง)';
-          alert('ไม่สามารถดึงตำแหน่งได้: กรุณาเปิด Location ในมือถือและอนุญาตการเข้าถึงพิกัด');
+          alert('ไม่สามารถดึงตำแหน่งได้: กรุณาเปิด Location และอนุญาตการเข้าถึงพิกัด');
         },
-        {
-          enableHighAccuracy: true,
-          timeout: 12000,
-          maximumAge: 0
-        }
+        { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
       );
     }
 
@@ -1150,7 +1131,7 @@
           alert(result.message || 'บันทึกไม่สำเร็จ');
         }
       } catch (err) {
-        alert('เชื่อมต่อเซิร์ฟเวอร์ไม่สำเร็จ กรุณาตรวจสอบอินเทอร์เน็ตหรือ Deploy URL');
+        alert('เชื่อมต่อเซิร์ฟเวอร์ไม่สำเร็จ กรุณาตรวจสอบอินเทอร์เน็ต');
       } finally {
         submitBtn.disabled = false;
         submitBtn.innerText = 'บันทึกข้อมูล';
