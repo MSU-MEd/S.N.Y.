@@ -117,7 +117,7 @@
     </div>
   </section>
 
-  <!-- Counter Stats (จัดรูปแบบเป็น 3 คอลัมน์ แถวเดียวกันทั้งบนมือถือและคอมพิวเตอร์) -->
+  <!-- Counter Stats (จัดเรียง 3 คอลัมน์แถวเดียวกันทั้งบนมือถือและคอมพิวเตอร์) -->
   <section class="max-w-5xl mx-auto px-4 -mt-8 relative z-20">
     <div class="bg-white rounded-3xl md:rounded-full shadow-lg border border-gray-100 py-4 px-3 sm:px-6 md:px-12 grid grid-cols-3 gap-2 sm:gap-5 items-center">
       
@@ -514,7 +514,7 @@
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyySjnrQHyQg3POeVuujGFldoJ5F1eOW-E_pAzyLSzxhygYGvHGDvAgqDsdKyZQ3A7a/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxKtYYnCikQwCz0oN7h4VvxJ4UIWd4o0Ur572e-AFESMi7XZguXGYWMn65FOvHgLqFM/exec";
     const CACHE_STORAGE_KEY = "songnangyai_plants_v10";
     const SCHOOL_COORDS = { lat: 16.17052, lng: 103.32186 };
 
@@ -1299,33 +1299,38 @@
     
     function closeAdminModal() { document.getElementById('adminModal').classList.add('hidden'); }
 
-    // ฟังก์ชันควบคุม QR Scanner / NFC Verification
+    // ฟังก์ชัน QR Scanner (เปิด Modal ก่อน แล้วค่อยเรียกกล้องเพื่อแก้ปัญหาขนาดพื้นที่เป็น 0)
     function openQrScanner() {
-      document.getElementById('qrScannerModal').classList.remove('hidden');
+      const modal = document.getElementById('qrScannerModal');
+      modal.classList.remove('hidden');
       document.getElementById('scanResultBox').classList.add('hidden');
       
       setTimeout(() => {
-        if (!html5QrCode) {
-          html5QrCode = new Html5Qrcode("reader");
-        }
-        startScannerCamera();
-      }, 300);
-    }
+        try {
+          if (!html5QrCode) {
+            html5QrCode = new Html5Qrcode("reader");
+          }
+          
+          if (html5QrCode.isScanning) return;
 
-    function startScannerCamera() {
-      const config = { fps: 10, qrbox: { width: 250, height: 250 } };
-      
-      html5QrCode.start(
-        { facingMode: "environment" }, 
-        config,
-        (decodedText, decodedResult) => {
-          handleScannedData(decodedText);
-          html5QrCode.stop().catch(err => console.log(err));
-        },
-        (errorMessage) => {}
-      ).catch(err => {
-        alert("ไม่สามารถเปิดกล้องได้ กรุณาตรวจสอบการอนุญาตใช้งานกล้องบนเบราว์เซอร์");
-      });
+          const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+          
+          html5QrCode.start(
+            { facingMode: "environment" }, 
+            config,
+            (decodedText, decodedResult) => {
+              handleScannedData(decodedText);
+              html5QrCode.stop().catch(err => console.log(err));
+            },
+            (errorMessage) => {}
+          ).catch(err => {
+            console.error("Camera Error:", err);
+            alert("ไม่สามารถเปิดกล้องได้: " + err + "\n\n(คำแนะนำ: ตรวจสอบว่าใช้งานผ่าน HTTPS และอนุญาตให้เว็บไซต์เข้าถึงกล้องแล้ว)");
+          });
+        } catch (e) {
+          console.error("Init Error:", e);
+        }
+      }, 400);
     }
 
     function restartScanner() {
@@ -1336,6 +1341,22 @@
         }).catch(() => {
           startScannerCamera();
         });
+      } else {
+        openQrScanner();
+      }
+    }
+
+    function startScannerCamera() {
+      if (html5QrCode && !html5QrCode.isScanning) {
+        html5QrCode.start(
+          { facingMode: "environment" }, 
+          { fps: 10, qrbox: { width: 250, height: 250 } },
+          (decodedText) => {
+            handleScannedData(decodedText);
+            html5QrCode.stop().catch(err => {});
+          },
+          (errorMessage) => {}
+        ).catch(err => alert("ไม่สามารถเปิดกล้องได้: " + err));
       }
     }
 
@@ -1369,7 +1390,7 @@
     }
 
     function closeQrScanner() {
-      if (html5QrCode) {
+      if (html5QrCode && html5QrCode.isScanning) {
         html5QrCode.stop().catch(err => {});
       }
       document.getElementById('qrScannerModal').classList.add('hidden');
